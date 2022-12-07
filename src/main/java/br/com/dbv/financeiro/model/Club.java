@@ -11,20 +11,14 @@
 //@AllArgsConstructor
 //@NoArgsConstructor
 //@Entity
-//@Table(name = "RESPONSIBLE")
-//public class Responsible {
+//@Table(name = "CLUB")
+//public class Club {
 //
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.AUTO)
 //    private UUID id;
 //
-//    @Column(name = "Name", length = 130, nullable = false)
-//    private String nome;
-//
-//    @Column(name = "Contact", length = 12, nullable = false)
-//    private String contact;
-//
-//    @Column(name = "Address", length = 150, nullable = false)
-//    private String address;
+//    @Column(name = "Name", length = 100, nullable = false)
+//    private String name;
 //
 //}
