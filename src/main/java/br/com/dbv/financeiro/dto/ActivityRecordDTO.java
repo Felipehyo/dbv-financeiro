@@ -28,6 +28,7 @@ public class ActivityRecordDTO {
         record.setUnit(unit);
         record.setActivity(activity);
         record.setDate(LocalDate.now());
+        record.setCreatedDate(LocalDateTime.now());
         record.setType(this.type);
         if (activity.getName().equals("Customize")) {
             record.setReason(this.reason);

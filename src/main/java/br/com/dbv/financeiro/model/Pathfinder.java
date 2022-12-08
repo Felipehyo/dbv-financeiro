@@ -1,32 +1,41 @@
-//package br.com.dbv.financeiro.model;
-//
-//import lombok.AllArgsConstructor;
-//import lombok.Data;
-//import lombok.EqualsAndHashCode;
-//import lombok.NoArgsConstructor;
-//
-//import javax.persistence.*;
-//import java.util.Date;
-//import java.util.List;
-//import java.util.UUID;
-//
-//@Data
-//@AllArgsConstructor
-//@NoArgsConstructor
-//@EqualsAndHashCode(callSuper = true)
-//@Entity
-//@Table(name = "PATHFINDER")
-//public class Pathfinder extends User {
-//
-//    @Column(name = "Sex", length = 6, nullable = false)
-//    private String sex;
-//
-//    @Temporal(TemporalType.DATE)
-//    @Column(name = "Birthdate", nullable = false)
-//    private Date birthDate;
-//
-////    @Column(name = "Responsible")
-////    @OneToMany(cascade = CascadeType.ALL, mappedBy = "id")
-////    private List<Responsible> responsible;
-//
-//}
+package br.com.dbv.financeiro.model;
+
+import br.com.dbv.financeiro.enums.UserTypeEnum;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
+
+import javax.persistence.*;
+import java.util.Date;
+import java.util.UUID;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "PATHFINDER")
+public class Pathfinder {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Type(type = "org.hibernate.type.UUIDCharType")
+    private UUID id;
+
+    @Column(name = "Name", length = 130, nullable = false)
+    private String name;
+
+    @Column(name = "UserType", length = 12, nullable = false)
+    private UserTypeEnum userType;
+
+    @OneToOne
+    @JoinColumn(name = "unit_id")
+    private Unit unit;
+
+    private Boolean active = Boolean.TRUE;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "Birthdate", nullable = false)
+    private Date birthDate;
+
+}

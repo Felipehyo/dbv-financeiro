@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -33,6 +34,7 @@ public class ActivityRecord {
     private RecordTypeEnum type;
 
     private String reason;
+    private LocalDateTime createdDate;
     private LocalDate date;
     private Integer points = 0;
 

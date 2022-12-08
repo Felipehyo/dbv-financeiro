@@ -5,12 +5,11 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum UserTypeEnum {
 
-    EXECUTIVE(1, "Leadership"),
-    DIRECTION(2, "Direction"),
-    PATHFINDER(3, "Pathfinder"),
-    RESPONSIBLE(4, "Responsible");
+    EXECUTIVE("Leadership"),
+    DIRECTION("Direction"),
+    PATHFINDER("Pathfinder"),
+    RESPONSIBLE("Responsible");
 
-    public Integer type;
     public String description;
 
 }
