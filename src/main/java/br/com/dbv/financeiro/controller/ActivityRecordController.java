@@ -2,9 +2,9 @@ package br.com.dbv.financeiro.controller;
 
 import br.com.dbv.financeiro.dto.ActivityRecordDTO;
 import br.com.dbv.financeiro.dto.ErrorDTO;
-import br.com.dbv.financeiro.model.Activities;
+import br.com.dbv.financeiro.model.Activity;
 import br.com.dbv.financeiro.model.ActivityRecord;
-import br.com.dbv.financeiro.model.Units;
+import br.com.dbv.financeiro.model.Unit;
 import br.com.dbv.financeiro.repository.ActivitiesRepository;
 import br.com.dbv.financeiro.repository.ActivityRecordRepository;
 import br.com.dbv.financeiro.repository.UnitRepository;
@@ -48,7 +48,7 @@ public class ActivityRecordController {
 
         var total = 0;
 
-        Units unit;
+        Unit unit;
         try {
             unit = unitRepository.findById(unitId).get();
         } catch (Exception e) {
@@ -73,14 +73,14 @@ public class ActivityRecordController {
 
         ActivityRecord record;
 
-        Units unit;
+        Unit unit;
         try {
             unit = unitRepository.findById(unitId).get();
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new ErrorDTO("400", "Unit not found", "Unit not found in database"));
         }
 
-        Activities activity;
+        Activity activity;
         try {
             activity = activitiesRepository.findById(activityId).get();
         } catch (Exception e) {

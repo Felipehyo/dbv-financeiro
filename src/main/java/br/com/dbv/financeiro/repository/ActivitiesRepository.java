@@ -1,6 +1,6 @@
 package br.com.dbv.financeiro.repository;
 
-import br.com.dbv.financeiro.model.Activities;
+import br.com.dbv.financeiro.model.Activity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,8 +8,8 @@ import javax.websocket.server.PathParam;
 import java.util.Optional;
 
 @Repository
-public interface ActivitiesRepository extends JpaRepository<Activities, Long> {
+public interface ActivitiesRepository extends JpaRepository<Activity, Long> {
 
-    Optional<Activities> findByName(@PathParam("name") String name);
+    Optional<Activity> findByName(@PathParam("name") String name);
 
 }

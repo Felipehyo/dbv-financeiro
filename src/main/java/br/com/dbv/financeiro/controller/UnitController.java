@@ -1,7 +1,7 @@
 package br.com.dbv.financeiro.controller;
 
 import br.com.dbv.financeiro.dto.UnitDTO;
-import br.com.dbv.financeiro.model.Units;
+import br.com.dbv.financeiro.model.Unit;
 import br.com.dbv.financeiro.repository.UnitRepository;
 import io.micrometer.core.instrument.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class UnitController {
     @PostMapping
     public ResponseEntity<?> createUnit(@RequestBody UnitDTO request) {
 
-        Units units = request.convert();
+        Unit units = request.convert();
 
         return ResponseEntity.ok().body(repository.save(units));
 

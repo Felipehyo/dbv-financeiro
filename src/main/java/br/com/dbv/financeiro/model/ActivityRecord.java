@@ -6,7 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -21,15 +23,17 @@ public class ActivityRecord {
 
     @OneToOne
     @JoinColumn(name = "unit_id")
-    private Units unit;
+    private Unit unit;
 
     @OneToOne
     @JoinColumn(name = "activity_id")
-    private Activities activity;
+    private Activity activity;
 
+    @NotNull
     private RecordTypeEnum type;
+
     private String reason;
-    private LocalDateTime date;
+    private LocalDate date;
     private Integer points = 0;
 
 }
