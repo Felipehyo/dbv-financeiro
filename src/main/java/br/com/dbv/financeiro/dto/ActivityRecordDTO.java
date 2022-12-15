@@ -4,6 +4,7 @@ import br.com.dbv.financeiro.enums.RecordTypeEnum;
 import br.com.dbv.financeiro.model.Activity;
 import br.com.dbv.financeiro.model.ActivityRecord;
 import br.com.dbv.financeiro.model.Unit;
+import io.micrometer.core.instrument.util.StringUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class ActivityRecordDTO {
 
+    private String title;
     private String reason;
     private RecordTypeEnum type;
     private Integer points = 0;
@@ -29,13 +31,16 @@ public class ActivityRecordDTO {
         record.setActivity(activity);
         record.setDate(LocalDate.now());
         record.setCreatedDate(LocalDateTime.now());
-        record.setType(this.type);
-        if (activity.getName().equals("Customize")) {
-            record.setReason(this.reason);
+        record.setType(type);
+
+        if (!StringUtils.isBlank(reason) && points != 0) {
+            record.setTitle(title);
+            record.setReason(reason);
             record.setPoints(type == RecordTypeEnum.MERIT ? points : -points);
         } else {
-            record.setReason(activity.getName());
-            record.setPoints(type == RecordTypeEnum.MERIT ? activity.getMerit() : -activity.getDemerit());
+            record.setTitle(activity.getName());
+            record.setReason(activity.getDescription());
+            record.setPoints(type == RecordTypeEnum.MERIT ? activity.getMerit() : type == RecordTypeEnum.DEMERIT ? -activity.getDemerit() : 0);
         }
 
         return record;

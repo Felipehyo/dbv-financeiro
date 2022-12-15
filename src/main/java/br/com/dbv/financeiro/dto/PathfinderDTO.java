@@ -31,4 +31,14 @@ public class PathfinderDTO {
         return pathfinder;
     }
 
+    public Pathfinder convert() {
+
+        Pathfinder pathfinder = new Pathfinder();
+        pathfinder.setName(this.name);
+        pathfinder.setUserType(this.userType);
+        pathfinder.setBirthDate(birthDate);
+
+        return pathfinder;
+    }
+
 }

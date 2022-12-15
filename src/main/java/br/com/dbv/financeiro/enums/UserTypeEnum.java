@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum UserTypeEnum {
 
-    EXECUTIVE("Leadership"),
+    EXECUTIVE("Executive"),
     DIRECTION("Direction"),
     PATHFINDER("Pathfinder"),
     RESPONSIBLE("Responsible");

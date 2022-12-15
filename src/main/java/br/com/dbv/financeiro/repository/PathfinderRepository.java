@@ -13,4 +13,6 @@ public interface PathfinderRepository extends JpaRepository<Pathfinder, UUID> {
 
     List<Optional<Pathfinder>> findByUnitId(Long id);
 
+    Optional<Pathfinder> findByEmail(String email);
+
 }

@@ -14,18 +14,18 @@ public class ActivityDTO {
     private String description;
     private Integer merit = 0;
     private Integer demerit = 0;
-    private Boolean saturday;
-    private Boolean sunday;
+    private Integer activityOrder;
+    private Boolean alwaysDisplay;
 
 
     public Activity convert() {
         Activity activity = new Activity();
-        activity.setName(this.name);
-        activity.setDescription(this.description);
-        activity.setMerit(this.merit);
-        activity.setDemerit(this.demerit);
-        activity.setSaturday(saturday);
-        activity.setSunday(sunday);
+        activity.setName(name);
+        activity.setDescription(description);
+        activity.setMerit(merit);
+        activity.setDemerit(demerit);
+        activity.setActivityOrder(activityOrder);
+        activity.setAlwaysDisplay(alwaysDisplay);
 
         return activity;
     }

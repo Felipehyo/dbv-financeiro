@@ -1,6 +1,7 @@
 package br.com.dbv.financeiro.controller;
 
 import br.com.dbv.financeiro.dto.ErrorDTO;
+import br.com.dbv.financeiro.dto.LoginDTO;
 import br.com.dbv.financeiro.dto.PathfinderDTO;
 import br.com.dbv.financeiro.dto.UnitDTO;
 import br.com.dbv.financeiro.model.Pathfinder;
@@ -48,15 +49,22 @@ public class PathfinderController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createUnit(@RequestBody PathfinderDTO request) {
+    public ResponseEntity<?> createUser(@RequestBody PathfinderDTO request) {
 
-        Optional<Unit> unit = unitRepository.findById(request.getUnitId());
+        Optional<Unit> unit;
+        Pathfinder pathfinder;
 
-        if (!unit.isPresent()) {
-            return ResponseEntity.badRequest().body(new ErrorDTO("400", "Unit not found", "Unit not found in database"));
+        if (request.getUnitId() != null) {
+            unit = unitRepository.findById(request.getUnitId());
+
+            if (!unit.isPresent()) {
+                return ResponseEntity.badRequest().body(new ErrorDTO("400", "Unit not found", "Unit not found in database"));
+            }
+
+            pathfinder = request.convert(unit.get());
+        } else {
+            pathfinder = request.convert();
         }
-
-        Pathfinder pathfinder = request.convert(unit.get());
 
         return ResponseEntity.ok().body(repository.save(pathfinder));
 

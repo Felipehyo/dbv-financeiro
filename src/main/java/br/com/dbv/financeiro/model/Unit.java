@@ -22,5 +22,8 @@ public class Unit {
     private String name;
 
     private Integer qtdPoints;
+    private String imageLink;
+    private String assignment;
+    private Integer unitOrder;
 
 }

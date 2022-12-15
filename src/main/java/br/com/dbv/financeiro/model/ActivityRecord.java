@@ -33,6 +33,7 @@ public class ActivityRecord {
     @NotNull
     private RecordTypeEnum type;
 
+    private String title;
     private String reason;
     private LocalDateTime createdDate;
     private LocalDate date;

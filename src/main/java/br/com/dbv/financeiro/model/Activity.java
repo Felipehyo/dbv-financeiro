@@ -29,11 +29,7 @@ public class Activity {
 
     @NotNull
     private Integer demerit;
-
-    @NotNull
-    private Boolean saturday;
-
-    @NotNull
-    private Boolean sunday;
+    private Integer activityOrder;
+    private Boolean alwaysDisplay;
 
 }

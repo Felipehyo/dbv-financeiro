@@ -25,6 +25,12 @@ public class Pathfinder {
     @Column(name = "Name", length = 130, nullable = false)
     private String name;
 
+    @Column(name = "Email", length = 50)
+    private String email;
+
+    @Column(name = "Password", length = 16)
+    private String password;
+
     @Column(name = "UserType", length = 12, nullable = false)
     private UserTypeEnum userType;
 
