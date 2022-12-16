@@ -6,7 +6,7 @@ import br.com.dbv.financeiro.dto.PresencePercentDTO;
 import br.com.dbv.financeiro.dto.PresenceTodayDTO;
 import br.com.dbv.financeiro.enums.PresenceTypeEnum;
 import br.com.dbv.financeiro.model.Kit;
-import br.com.dbv.financeiro.model.Pathfinder;
+import br.com.dbv.financeiro.model.User;
 import br.com.dbv.financeiro.model.Presence;
 import br.com.dbv.financeiro.repository.KitRepository;
 import br.com.dbv.financeiro.repository.PathfinderRepository;
@@ -43,7 +43,7 @@ public class PresenceController {
     public ResponseEntity<?> getAllPresencesWithPercent() {
 
         List<Presence> all = repository.findAll();
-        List<Pathfinder> users = pathfinderRepository.findAll();
+        List<User> users = pathfinderRepository.findAll();
         List<PresencePercentDTO> percents = new ArrayList<>();
         List<String> countDates = new ArrayList<>();
 
@@ -72,7 +72,7 @@ public class PresenceController {
     @GetMapping("/today")
     public ResponseEntity<?> getAllPresencesToday() {
 
-        List<Pathfinder> allUsers = pathfinderRepository.findAll();
+        List<User> allUsers = pathfinderRepository.findAll();
 
         List<Presence> presenceToday = repository.findByDateEquals(LocalDate.now());
 
@@ -111,7 +111,7 @@ public class PresenceController {
     @PostMapping("/{userId}")
     public ResponseEntity<?> createPresence(@PathVariable("userId") UUID userId, @RequestBody PresenceDTO request) {
 
-        Optional<Pathfinder> pathfinder = pathfinderRepository.findById(userId);
+        Optional<User> pathfinder = pathfinderRepository.findById(userId);
 
         if (!pathfinder.isPresent()) {
             return ResponseEntity.badRequest().body(new ErrorDTO("400", "Pathfinder not found", "Pathfinder not found in database"));

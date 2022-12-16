@@ -1,7 +1,7 @@
 package br.com.dbv.financeiro.dto;
 
 import br.com.dbv.financeiro.enums.UserTypeEnum;
-import br.com.dbv.financeiro.model.Pathfinder;
+import br.com.dbv.financeiro.model.User;
 import br.com.dbv.financeiro.model.Unit;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,9 +20,9 @@ public class PathfinderDTO {
     private Date birthDate;
 
 
-    public Pathfinder convert(Unit unit) {
+    public User convert(Unit unit) {
 
-        Pathfinder pathfinder = new Pathfinder();
+        User pathfinder = new User();
         pathfinder.setName(this.name);
         pathfinder.setUserType(this.userType);
         pathfinder.setUnit(unit);
@@ -31,9 +31,9 @@ public class PathfinderDTO {
         return pathfinder;
     }
 
-    public Pathfinder convert() {
+    public User convert() {
 
-        Pathfinder pathfinder = new Pathfinder();
+        User pathfinder = new User();
         pathfinder.setName(this.name);
         pathfinder.setUserType(this.userType);
         pathfinder.setBirthDate(birthDate);

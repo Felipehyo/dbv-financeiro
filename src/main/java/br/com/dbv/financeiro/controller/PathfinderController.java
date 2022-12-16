@@ -1,16 +1,12 @@
 package br.com.dbv.financeiro.controller;
 
 import br.com.dbv.financeiro.dto.ErrorDTO;
-import br.com.dbv.financeiro.dto.LoginDTO;
 import br.com.dbv.financeiro.dto.PathfinderDTO;
-import br.com.dbv.financeiro.dto.UnitDTO;
-import br.com.dbv.financeiro.model.Pathfinder;
+import br.com.dbv.financeiro.model.User;
 import br.com.dbv.financeiro.model.Unit;
 import br.com.dbv.financeiro.repository.PathfinderRepository;
 import br.com.dbv.financeiro.repository.UnitRepository;
-import io.micrometer.core.instrument.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,7 +48,7 @@ public class PathfinderController {
     public ResponseEntity<?> createUser(@RequestBody PathfinderDTO request) {
 
         Optional<Unit> unit;
-        Pathfinder pathfinder;
+        User pathfinder;
 
         if (request.getUnitId() != null) {
             unit = unitRepository.findById(request.getUnitId());

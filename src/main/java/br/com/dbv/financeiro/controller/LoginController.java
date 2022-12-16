@@ -3,8 +3,7 @@ package br.com.dbv.financeiro.controller;
 import br.com.dbv.financeiro.dto.ErrorDTO;
 import br.com.dbv.financeiro.dto.LoginDTO;
 import br.com.dbv.financeiro.dto.LoginResponseDTO;
-import br.com.dbv.financeiro.model.Pathfinder;
-import br.com.dbv.financeiro.model.Unit;
+import br.com.dbv.financeiro.model.User;
 import br.com.dbv.financeiro.repository.PathfinderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +24,7 @@ public class LoginController {
     @PostMapping
     public ResponseEntity<?> doLogin(@RequestBody LoginDTO request) {
 
-        Optional<Pathfinder> user = repository.findByEmail(request.getEmail());
+        Optional<User> user = repository.findByEmail(request.getEmail());
 
         if (!user.isPresent()) {
             return ResponseEntity.badRequest().body(new ErrorDTO("400", "User not found", "User not found in database"));

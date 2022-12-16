@@ -1,6 +1,6 @@
 package br.com.dbv.financeiro.dto;
 
-import br.com.dbv.financeiro.model.Pathfinder;
+import br.com.dbv.financeiro.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class PresencePercentDTO {
 
-    private Pathfinder user;
+    private User user;
     private Integer percent;
 
 }
