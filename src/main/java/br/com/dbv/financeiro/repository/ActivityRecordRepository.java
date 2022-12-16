@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 public interface ActivityRecordRepository extends JpaRepository<ActivityRecord, Long> {
 
-    List<Optional<ActivityRecord>> findByUnitId(@PathParam("unit_id") Long id);
+    List<ActivityRecord> findByUnitId(@PathParam("unit_id") Long id);
 
     List<Optional<ActivityRecord>> findByUnitIdAndDateEquals(Long id, LocalDate date);
 

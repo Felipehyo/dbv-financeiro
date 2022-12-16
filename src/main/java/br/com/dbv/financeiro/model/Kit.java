@@ -17,12 +17,12 @@ public class Kit {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private Boolean scarf;
-    private Boolean bible;
-    private Boolean activityNotebook;
-    private Boolean bottle;
-    private Boolean cap;
-    private Boolean pencil;
-    private Boolean bibleStudy;
+    private Boolean scarf = Boolean.FALSE;
+    private Boolean bible = Boolean.FALSE;
+    private Boolean activityNotebook = Boolean.FALSE;
+    private Boolean bottle = Boolean.FALSE;
+    private Boolean cap = Boolean.FALSE;
+    private Boolean pencil = Boolean.FALSE;
+    private Boolean bibleStudy = Boolean.FALSE;
 
 }

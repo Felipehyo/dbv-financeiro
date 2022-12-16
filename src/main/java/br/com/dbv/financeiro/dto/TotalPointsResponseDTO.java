@@ -1,5 +1,6 @@
-package br.com.dbv.financeiro.controller;
+package br.com.dbv.financeiro.dto;
 
+import br.com.dbv.financeiro.model.Unit;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TotalPointsResponseDTO {
 
-    private String unit;
+    private Unit unit;
     private Integer total;
 
 }

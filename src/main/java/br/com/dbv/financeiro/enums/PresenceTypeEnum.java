@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum PresenceTypeEnum {
 
-    PRESENT,
-    ABSENT
+    ABSENT,
+    PRESENT
 
 }

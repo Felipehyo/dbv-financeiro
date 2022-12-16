@@ -2,6 +2,7 @@ package br.com.dbv.financeiro.controller;
 
 import br.com.dbv.financeiro.dto.ActivityRecordDTO;
 import br.com.dbv.financeiro.dto.ErrorDTO;
+import br.com.dbv.financeiro.dto.TotalPointsResponseDTO;
 import br.com.dbv.financeiro.model.Activity;
 import br.com.dbv.financeiro.model.ActivityRecord;
 import br.com.dbv.financeiro.model.Unit;
@@ -13,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +42,42 @@ public class ActivityRecordController {
     @GetMapping("/{unitId}")
     public ResponseEntity<?> getRecordsByUnitId(@PathVariable("unitId") Long id) {
 
-        return ResponseEntity.ok().body(repository.findByUnitId(id));
+        List<ActivityRecord> records = repository.findByUnitId(id);
+
+        records.sort(Comparator.comparing(ActivityRecord::getCreatedDate).reversed());
+
+        return ResponseEntity.ok().body(records);
+
+    }
+
+    @GetMapping("/total-points")
+    public ResponseEntity<?> getTotalPoints() {
+
+
+        List<Unit> units;
+        try {
+            units = unitRepository.findAll();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new ErrorDTO("400", "Unit not found", "Unit not found in database"));
+        }
+
+        List<TotalPointsResponseDTO> totalPointsResponseDTO = new ArrayList<>();
+
+        for (var unit : units) {
+            var total = 0;
+            List<ActivityRecord> records = repository.findByUnitId(unit.getId());
+
+            if (records.size() == 0) {
+                totalPointsResponseDTO.add(new TotalPointsResponseDTO(unit, total));
+            } else {
+                for (var record : records) {
+                    total = total + record.getPoints();
+                }
+                totalPointsResponseDTO.add(new TotalPointsResponseDTO(unit, total));
+            }
+        }
+
+        return ResponseEntity.ok().body(totalPointsResponseDTO);
 
     }
 
@@ -55,16 +93,16 @@ public class ActivityRecordController {
             return ResponseEntity.badRequest().body(new ErrorDTO("400", "Unit not found", "Unit not found in database"));
         }
 
-        List<Optional<ActivityRecord>> records = repository.findByUnitId(unitId);
+        List<ActivityRecord> records = repository.findByUnitId(unitId);
 
         if (records.size() == 0)
-            return ResponseEntity.ok().body(new TotalPointsResponseDTO(unit.getName(), total));
+            return ResponseEntity.ok().body(new TotalPointsResponseDTO(unit, total));
 
-        for (Optional<ActivityRecord> record : records) {
-            total = total + record.get().getPoints();
+        for (var record : records) {
+            total = total + record.getPoints();
         }
 
-        return ResponseEntity.ok().body(new TotalPointsResponseDTO(unit.getName(), total));
+        return ResponseEntity.ok().body(new TotalPointsResponseDTO(unit, total));
 
     }
 
