@@ -1,9 +1,9 @@
 spring:
   datasource:
 #    url: jdbc:postgresql://localhost:3306/dbvfinanceiro
-    url: ${DATABASE_URL}
-    #username: root
-    #password: root
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:3306/dbvfinanceiro}
+    username: root
+    password: root
   jpa:
     hibernate.ddl-auto: update
     generate-ddl: false
