@@ -33,7 +33,7 @@ public class ActivityRecordDTO {
         record.setCreatedDate(LocalDateTime.now());
         record.setType(type);
 
-        if (!StringUtils.isBlank(reason) && points != 0) {
+        if (activity.getAlwaysDisplay()) {
             record.setTitle(title);
             record.setReason(reason);
             record.setPoints(type == RecordTypeEnum.MERIT ? points : -points);
