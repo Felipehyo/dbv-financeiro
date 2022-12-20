@@ -11,4 +11,8 @@ public class PresencePercentDTO {
     private User user;
     private Integer percent;
 
+    public String getUserName() {
+        return user.getName();
+    }
+
 }

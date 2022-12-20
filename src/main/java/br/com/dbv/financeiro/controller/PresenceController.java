@@ -64,6 +64,7 @@ public class PresenceController {
             percents.add(new PresencePercentDTO(user, percent));
         }
 
+        percents.sort(Comparator.comparing(PresencePercentDTO::getUserName));
 
         return ResponseEntity.ok().body(percents);
 
