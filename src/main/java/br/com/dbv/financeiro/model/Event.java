@@ -6,25 +6,25 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "UNIT")
-public class Unit {
+@Table(name = "EVENT")
+public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotNull
-    private String name;
+    private String event;
 
-    private Integer qtdPoints;
-    private String imageLink;
-    private String assignment;
-    private Integer unitOrder;
+    @NotNull
+    private Double value;
+    private LocalDate date;
 
     @ManyToOne
     @JoinColumn(name = "club_id")

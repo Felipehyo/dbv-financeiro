@@ -1,5 +1,6 @@
 package br.com.dbv.financeiro.dto;
 
+import br.com.dbv.financeiro.model.Club;
 import br.com.dbv.financeiro.model.Unit;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,8 +16,9 @@ public class UnitDTO {
     private String imageLink;
     private Integer unitOrder;
     private String assignment;
+    private Long clubId;
 
-    public Unit convert() {
+    public Unit convert(Club club) {
 
         Unit unit = new Unit();
         unit.setName(name);
@@ -24,6 +26,7 @@ public class UnitDTO {
         unit.setImageLink(imageLink);
         unit.setUnitOrder(unitOrder);
         unit.setAssignment(assignment);
+        unit.setClub(club);
 
         return unit;
     }

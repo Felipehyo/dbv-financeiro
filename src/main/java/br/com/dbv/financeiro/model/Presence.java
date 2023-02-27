@@ -32,4 +32,8 @@ public class Presence {
     private LocalDate date;
     private PresenceTypeEnum presenceType;
 
+    @ManyToOne
+    @JoinColumn(name = "club_id")
+    private Club club;
+
 }

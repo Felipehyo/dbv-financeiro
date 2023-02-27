@@ -11,8 +11,8 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "UNIT")
-public class Unit {
+@Table(name = "CLUB")
+public class Club {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,13 +21,6 @@ public class Unit {
     @NotNull
     private String name;
 
-    private Integer qtdPoints;
-    private String imageLink;
-    private String assignment;
-    private Integer unitOrder;
-
-    @ManyToOne
-    @JoinColumn(name = "club_id")
-    private Club club;
+    private Double bank = 0.0;
 
 }

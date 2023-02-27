@@ -7,6 +7,7 @@ import br.com.dbv.financeiro.model.ActivityRecord;
 import br.com.dbv.financeiro.model.Unit;
 import br.com.dbv.financeiro.repository.ActivitiesRepository;
 import br.com.dbv.financeiro.repository.ActivityRecordRepository;
+import br.com.dbv.financeiro.repository.ClubRepository;
 import br.com.dbv.financeiro.repository.UnitRepository;
 import io.micrometer.core.instrument.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,17 +32,20 @@ public class ActivityController {
     @Autowired
     private ActivityRecordRepository activityRecordRepository;
 
-    @GetMapping()
-    public ResponseEntity<?> getAllActivities() {
+    @Autowired
+    private ClubRepository clubRepository;
 
-        return ResponseEntity.ok().body(repository.findAll());
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getActivity(@PathVariable("id") Long id) {
+
+        return ResponseEntity.ok().body(repository.findById(id));
 
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getActivities(@PathVariable("id") Long id) {
+    @GetMapping("/club/{clubId}")
+    public ResponseEntity<?> getActivitiesByClub(@PathVariable("clubId") Long id) {
 
-        return ResponseEntity.ok().body(repository.findById(id));
+        return ResponseEntity.ok().body(repository.findByClubId(id));
 
     }
 
@@ -70,14 +74,21 @@ public class ActivityController {
     }
 
     @PostMapping
-    public ResponseEntity<Activity> createActivity(@RequestBody ActivityDTO request) {
+    public ResponseEntity<?> createActivity(@RequestBody ActivityDTO request) {
 
         Activity activity;
         try {
             repository.findByName(request.getName()).get();
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(new ErrorDTO("400", "Activity already registered", "Activity already registered in database"));
         } catch (Exception e) {
-            activity = request.convert();
+
+            var club = clubRepository.findById(request.getClubId());
+
+            if (!club.isPresent()) {
+                return ResponseEntity.badRequest().body(new ErrorDTO("400", "Club not found", "Club not found in database"));
+            }
+
+            activity = request.convert(club.get());
             return ResponseEntity.ok().body(repository.save(activity));
         }
 
@@ -92,7 +103,9 @@ public class ActivityController {
         if (request.getMerit() != null && request.getMerit() >= 0)
             activity.setMerit(request.getMerit());
         if (request.getDemerit() != null && request.getDemerit() >= 0)
-            activity.setDemerit(request.getMerit());
+            activity.setDemerit(request.getDemerit());
+        if (request.getActivityOrder() != null) activity.setActivityOrder(request.getActivityOrder());
+        if (request.getAlwaysDisplay() != null) activity.setAlwaysDisplay(request.getAlwaysDisplay());
 
         repository.save(activity);
 

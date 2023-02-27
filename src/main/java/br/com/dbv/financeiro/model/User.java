@@ -14,7 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "PATHFINDER")
+@Table(name = "USER")
 public class User {
 
     @Id
@@ -43,5 +43,11 @@ public class User {
     @Temporal(TemporalType.DATE)
     @Column(name = "Birthdate", nullable = false)
     private Date birthDate;
+
+    private Double bank = 0.0;
+
+    @ManyToOne
+    @JoinColumn(name = "club_id")
+    private Club club;
 
 }

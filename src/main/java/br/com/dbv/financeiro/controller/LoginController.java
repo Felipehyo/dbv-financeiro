@@ -4,7 +4,7 @@ import br.com.dbv.financeiro.dto.ErrorDTO;
 import br.com.dbv.financeiro.dto.LoginDTO;
 import br.com.dbv.financeiro.dto.LoginResponseDTO;
 import br.com.dbv.financeiro.model.User;
-import br.com.dbv.financeiro.repository.PathfinderRepository;
+import br.com.dbv.financeiro.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +19,7 @@ import java.util.Optional;
 public class LoginController {
 
     @Autowired
-    private PathfinderRepository repository;
+    private UserRepository repository;
 
     @PostMapping
     public ResponseEntity<?> doLogin(@RequestBody LoginDTO request) {

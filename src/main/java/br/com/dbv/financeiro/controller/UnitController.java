@@ -1,7 +1,9 @@
 package br.com.dbv.financeiro.controller;
 
+import br.com.dbv.financeiro.dto.ErrorDTO;
 import br.com.dbv.financeiro.dto.UnitDTO;
 import br.com.dbv.financeiro.model.Unit;
+import br.com.dbv.financeiro.repository.ClubRepository;
 import br.com.dbv.financeiro.repository.UnitRepository;
 import io.micrometer.core.instrument.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +18,26 @@ public class UnitController {
     @Autowired
     private UnitRepository repository;
 
+    @Autowired
+    private ClubRepository clubRepository;
+
     @GetMapping()
     public ResponseEntity<?> getAllUnits() {
 
         return ResponseEntity.ok().body(repository.findAll());
+
+    }
+
+    @GetMapping("/club/{clubId}")
+    public ResponseEntity<?> getUnitsByClub(@PathVariable("clubId") Long clubId) {
+
+        var club = clubRepository.findById(clubId);
+
+        if (!club.isPresent()) {
+            return ResponseEntity.badRequest().body(new ErrorDTO("400", "Club not found", "Club not found in database"));
+        }
+
+        return ResponseEntity.ok().body(repository.findByClubId(clubId));
 
     }
 
@@ -33,7 +51,13 @@ public class UnitController {
     @PostMapping
     public ResponseEntity<?> createUnit(@RequestBody UnitDTO request) {
 
-        Unit units = request.convert();
+        var club = clubRepository.findById(request.getClubId());
+
+        if (!club.isPresent()) {
+            return ResponseEntity.badRequest().body(new ErrorDTO("400", "Club not found", "Club not found in database"));
+        }
+
+        Unit units = request.convert(club.get());
 
         return ResponseEntity.ok().body(repository.save(units));
 

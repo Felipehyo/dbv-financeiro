@@ -4,15 +4,18 @@ import br.com.dbv.financeiro.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface PathfinderRepository extends JpaRepository<User, UUID> {
+public interface UserRepository extends JpaRepository<User, UUID> {
 
     List<Optional<User>> findByUnitId(Long id);
 
     Optional<User> findByEmail(String email);
+
+    List<User> findByClubId(@PathParam("club_id") Long id);
 
 }

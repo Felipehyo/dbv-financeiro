@@ -8,6 +8,7 @@ import br.com.dbv.financeiro.model.ActivityRecord;
 import br.com.dbv.financeiro.model.Unit;
 import br.com.dbv.financeiro.repository.ActivitiesRepository;
 import br.com.dbv.financeiro.repository.ActivityRecordRepository;
+import br.com.dbv.financeiro.repository.ClubRepository;
 import br.com.dbv.financeiro.repository.UnitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,14 +32,17 @@ public class ActivityRecordController {
     @Autowired
     private UnitRepository unitRepository;
 
-    @GetMapping()
-    public ResponseEntity<?> getAllRecords() {
+    @Autowired
+    private ClubRepository clubRepository;
 
-        return ResponseEntity.ok().body(repository.findAll());
+    @GetMapping("/club/{clubId}")
+    public ResponseEntity<?> getAllRecordsByClub(@PathVariable("clubId") Long id) {
+
+        return ResponseEntity.ok().body(repository.findByActivityClubId(id));
 
     }
 
-    @GetMapping("/{unitId}")
+    @GetMapping("/unit/{unitId}")
     public ResponseEntity<?> getRecordsByUnitId(@PathVariable("unitId") Long id) {
 
         List<ActivityRecord> records = repository.findByUnitId(id);
@@ -49,13 +53,18 @@ public class ActivityRecordController {
 
     }
 
-    @GetMapping("/total-points")
-    public ResponseEntity<?> getTotalPoints() {
+    @GetMapping("/total-points/club/{clubId}")
+    public ResponseEntity<?> getTotalPoints(@PathVariable("clubId") Long clubId) {
 
+        var club = clubRepository.findById(clubId);
+
+        if (!club.isPresent()) {
+            return ResponseEntity.badRequest().body(new ErrorDTO("400", "Club not found", "Club not found in database"));
+        }
 
         List<Unit> units;
         try {
-            units = unitRepository.findAll();
+            units = unitRepository.findByClubId(clubId);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new ErrorDTO("400", "Unit not found", "Unit not found in database"));
         }
@@ -80,7 +89,7 @@ public class ActivityRecordController {
 
     }
 
-    @GetMapping("/total-points/{unitId}")
+    @GetMapping("/total-points/unit/{unitId}")
     public ResponseEntity<?> getTotalPointsByUnitId(@PathVariable("unitId") Long unitId) {
 
         var total = 0;
@@ -132,8 +141,11 @@ public class ActivityRecordController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteRecord(@PathVariable("id") Long id) {
-
-        repository.delete(repository.findById(id).get());
+        try {
+            repository.delete(repository.findById(id).get());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDTO("400", "Activity not found", "Activity does not exist or has already been deleted"));
+        }
 
         return new ResponseEntity<>(HttpStatus.OK);
 
