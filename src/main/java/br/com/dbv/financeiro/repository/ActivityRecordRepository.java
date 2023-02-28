@@ -15,5 +15,6 @@ public interface ActivityRecordRepository extends JpaRepository<ActivityRecord, 
     List<ActivityRecord> findByUnitId(@PathParam("unit_id") Long id);
     List<ActivityRecord> findByActivityClubId(@PathParam("club_id") Long id);
     List<Optional<ActivityRecord>> findByUnitIdAndDateEquals(Long id, LocalDate date);
+    ActivityRecord findByUnitIdAndDateEqualsAndActivityId(Long id, LocalDate date, Long activityId);
 
 }

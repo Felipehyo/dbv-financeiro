@@ -15,9 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/activity-record")
@@ -126,11 +128,20 @@ public class ActivityRecordController {
             return ResponseEntity.badRequest().body(new ErrorDTO("400", "Unit not found", "Unit not found in database"));
         }
 
-        Activity activity;
-        try {
-            activity = activitiesRepository.findById(activityId).get();
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new ErrorDTO("400", "Activity not found", "Activity not found in database"));
+        Activity activity = null;
+
+        if (activityId != 0) {
+            try {
+                activity = activitiesRepository.findById(activityId).get();
+
+                ActivityRecord response = repository.findByUnitIdAndDateEqualsAndActivityId(unitId, LocalDate.now(), activity.getId());
+                if (response != null) {
+                    return ResponseEntity.badRequest().body(new ErrorDTO("001", "Activity already registered ", "Activity already registered in database"));
+                }
+
+            } catch (Exception e) {
+                return ResponseEntity.badRequest().body(new ErrorDTO("400", "Activity not found", "Activity not found in database"));
+            }
         }
 
         record = request.convert(unit, activity);
