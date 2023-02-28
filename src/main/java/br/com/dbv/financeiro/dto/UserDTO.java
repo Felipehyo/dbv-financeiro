@@ -2,7 +2,7 @@ package br.com.dbv.financeiro.dto;
 
 import br.com.dbv.financeiro.enums.UserTypeEnum;
 import br.com.dbv.financeiro.model.Club;
-import br.com.dbv.financeiro.model.User;
+import br.com.dbv.financeiro.model.Pathfinder;
 import br.com.dbv.financeiro.model.Unit;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,9 +21,9 @@ public class UserDTO {
     private Date birthDate;
     private Long clubId;
 
-    public User convert(Unit unit, Club club) {
+    public Pathfinder convert(Unit unit, Club club) {
 
-        User user = new User();
+        Pathfinder user = new Pathfinder();
         user.setName(this.name);
         user.setUserType(this.userType);
         user.setUnit(unit);
@@ -33,9 +33,9 @@ public class UserDTO {
         return user;
     }
 
-    public User convert(Club club) {
+    public Pathfinder convert(Club club) {
 
-        User user = new User();
+        Pathfinder user = new Pathfinder();
         user.setName(this.name);
         user.setUserType(this.userType);
         user.setBirthDate(birthDate);

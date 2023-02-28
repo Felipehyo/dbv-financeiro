@@ -7,13 +7,12 @@ import br.com.dbv.financeiro.dto.PresenceTodayDTO;
 import br.com.dbv.financeiro.enums.PresenceTypeEnum;
 import br.com.dbv.financeiro.model.Kit;
 import br.com.dbv.financeiro.model.Presence;
-import br.com.dbv.financeiro.model.User;
+import br.com.dbv.financeiro.model.Pathfinder;
 import br.com.dbv.financeiro.repository.ClubRepository;
 import br.com.dbv.financeiro.repository.KitRepository;
 import br.com.dbv.financeiro.repository.UserRepository;
 import br.com.dbv.financeiro.repository.PresenceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,7 +58,7 @@ public class PresenceController {
         }
 
         List<Presence> all = repository.findByClubId(clubId);
-        List<User> users = userRepository.findByClubId(clubId);
+        List<Pathfinder> users = userRepository.findByClubIdAndActive(clubId, Boolean.TRUE);
         List<PresencePercentDTO> percents = new ArrayList<>();
         List<String> countDates = new ArrayList<>();
 
@@ -97,7 +96,7 @@ public class PresenceController {
             return ResponseEntity.badRequest().body(new ErrorDTO("400", "Club not found", "Club not found in database"));
         }
 
-        List<User> allUsers = userRepository.findByClubId(clubId);
+        List<Pathfinder> allUsers = userRepository.findByClubIdAndActive(clubId, Boolean.TRUE);
 
         List<Presence> presenceToday = repository.findByClubIdAndDateEquals(clubId, LocalDate.now());
 
@@ -136,7 +135,7 @@ public class PresenceController {
     @PostMapping("/{userId}")
     public ResponseEntity<?> createPresence(@PathVariable("userId") UUID userId, @RequestBody PresenceDTO request) {
 
-        Optional<User> pathfinder = userRepository.findById(userId);
+        Optional<Pathfinder> pathfinder = userRepository.findById(userId);
 
         if (!pathfinder.isPresent()) {
             return ResponseEntity.badRequest().body(new ErrorDTO("400", "Pathfinder not found", "Pathfinder not found in database"));

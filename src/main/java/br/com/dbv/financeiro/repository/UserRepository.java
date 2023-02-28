@@ -1,6 +1,6 @@
 package br.com.dbv.financeiro.repository;
 
-import br.com.dbv.financeiro.model.User;
+import br.com.dbv.financeiro.model.Pathfinder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,12 +10,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, UUID> {
+public interface UserRepository extends JpaRepository<Pathfinder, UUID> {
 
-    List<Optional<User>> findByUnitId(Long id);
+    List<Optional<Pathfinder>> findByUnitIdAndActive(Long id, Boolean active);
 
-    Optional<User> findByEmail(String email);
+    Optional<Pathfinder> findByEmailAndActive(String email, Boolean active);
 
-    List<User> findByClubId(@PathParam("club_id") Long id);
+    List<Pathfinder> findByClubIdAndActive(@PathParam("club_id") Long id, Boolean active);
 
 }

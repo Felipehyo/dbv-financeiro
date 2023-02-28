@@ -2,7 +2,7 @@ package br.com.dbv.financeiro.controller;
 
 import br.com.dbv.financeiro.dto.ErrorDTO;
 import br.com.dbv.financeiro.dto.UserDTO;
-import br.com.dbv.financeiro.model.User;
+import br.com.dbv.financeiro.model.Pathfinder;
 import br.com.dbv.financeiro.model.Unit;
 import br.com.dbv.financeiro.repository.ClubRepository;
 import br.com.dbv.financeiro.repository.UserRepository;
@@ -30,7 +30,7 @@ public class UserController {
     @GetMapping("/all/{clubId}")
     public ResponseEntity<?> getUsersByClub(@PathVariable("clubId") Long id) {
 
-        return ResponseEntity.ok().body(repository.findByClubId(id));
+        return ResponseEntity.ok().body(repository.findByClubIdAndActive(id, Boolean.TRUE));
 
     }
 
@@ -44,7 +44,7 @@ public class UserController {
     @GetMapping("/unit/{unitId}")
     public ResponseEntity<?> getUserByUnitId(@PathVariable("unitId") Long unitId) {
 
-        return ResponseEntity.ok().body(repository.findByUnitId(unitId));
+        return ResponseEntity.ok().body(repository.findByUnitIdAndActive(unitId, Boolean.TRUE));
 
     }
 
@@ -52,7 +52,7 @@ public class UserController {
     public ResponseEntity<?> createUser(@RequestBody UserDTO request) {
 
         Optional<Unit> unit;
-        User user;
+        Pathfinder user;
 
         var club = clubRepository.findById(request.getClubId());
 

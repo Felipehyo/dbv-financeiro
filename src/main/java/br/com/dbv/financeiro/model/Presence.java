@@ -23,7 +23,7 @@ public class Presence {
     @OneToOne
     @JoinColumn(name = "pathfinder_id")
     @NotNull
-    private User pathfinder;
+    private Pathfinder pathfinder;
 
     @OneToOne
     @JoinColumn(name = "kit_id")

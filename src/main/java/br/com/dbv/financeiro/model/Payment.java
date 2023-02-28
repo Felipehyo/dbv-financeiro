@@ -28,8 +28,8 @@ public class Payment {
     private Club club;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "pathfinder_id")
+    private Pathfinder pathfinder;
 
     @ManyToOne
     @JoinColumn(name = "event_id")

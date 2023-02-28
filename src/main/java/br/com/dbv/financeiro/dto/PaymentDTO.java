@@ -4,7 +4,7 @@ import br.com.dbv.financeiro.enums.FormOfPaymentEnum;
 import br.com.dbv.financeiro.model.Club;
 import br.com.dbv.financeiro.model.Event;
 import br.com.dbv.financeiro.model.Payment;
-import br.com.dbv.financeiro.model.User;
+import br.com.dbv.financeiro.model.Pathfinder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,7 +24,7 @@ public class PaymentDTO {
     private Long eventId;
     private UUID userId;
 
-    public Payment convert(Club club, Event event, User user) {
+    public Payment convert(Club club, Event event, Pathfinder user) {
 
         Payment payment = new Payment();
         payment.setValue(value);
@@ -32,7 +32,7 @@ public class PaymentDTO {
         payment.setDate(date);
         payment.setClub(club);
         payment.setEvent(event);
-        payment.setUser(user);
+        payment.setPathfinder(user);
 
         return payment;
 
