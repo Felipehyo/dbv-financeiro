@@ -63,7 +63,7 @@ public class ActivityController {
 
         for (Activity activity : repository.findAll()) {
             for (Optional<ActivityRecord> record : allRecords) {
-                if (record.get().getActivity().getId() == activity.getId() && record.get().getDate().equals(LocalDate.now()) && !activity.getAlwaysDisplay()) {
+                if (record.get().getActivity() != null && record.get().getActivity().getId() == activity.getId() && record.get().getDate().equals(LocalDate.now()) && !activity.getAlwaysDisplay()) {
                     activities.remove(activity);
                     break;
                 }
