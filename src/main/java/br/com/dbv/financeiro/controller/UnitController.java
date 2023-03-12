@@ -80,9 +80,15 @@ public class UnitController {
     @PatchMapping("/{id}/add/{qtdPoints}")
     public ResponseEntity<?> addPoints(@PathVariable("id") Long id, @PathVariable("qtdPoints") Integer qtdPoints) {
 
-        var unit = repository.findById(id).get();
-        unit.setQtdPoints(unit.getQtdPoints() + qtdPoints);
-        repository.save(unit);
+        Unit unit;
+
+        try {
+            unit = repository.findById(id).get();
+            unit.setQtdPoints(unit.getQtdPoints() + qtdPoints);
+            repository.save(unit);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new ErrorDTO("100", "Not permitted", "Not permitted"));
+        }
 
         return ResponseEntity.ok().body(unit);
 
@@ -91,8 +97,36 @@ public class UnitController {
     @PatchMapping("/{id}/remove/{qtdPoints}")
     public ResponseEntity<?> removePoints(@PathVariable("id") Long id, @PathVariable("qtdPoints") Integer qtdPoints) {
 
+        Unit unit;
+
+        try {
+            unit = repository.findById(id).get();
+            unit.setQtdPoints(unit.getQtdPoints() - qtdPoints);
+            repository.save(unit);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new ErrorDTO("100", "Not permitted", "Not permitted"));
+        }
+
+        return ResponseEntity.ok().body(unit);
+
+    }
+
+    @PatchMapping("/{id}/pendency-deposit/{qtdPoints}")
+    public ResponseEntity<?> addPendencyPoints(@PathVariable("id") Long id, @PathVariable("qtdPoints") Integer qtdPoints) {
+
         var unit = repository.findById(id).get();
-        unit.setQtdPoints(unit.getQtdPoints() - qtdPoints);
+        unit.setDeliveryPendingPoints(unit.getDeliveryPendingPoints() - qtdPoints);
+        repository.save(unit);
+
+        return ResponseEntity.ok().body(unit);
+
+    }
+
+    @PatchMapping("/{id}/pendency-recall/{qtdPoints}")
+    public ResponseEntity<?> removePendencyPoints(@PathVariable("id") Long id, @PathVariable("qtdPoints") Integer qtdPoints) {
+
+        var unit = repository.findById(id).get();
+        unit.setDeliveryPendingPoints(unit.getDeliveryPendingPoints() + qtdPoints);
         repository.save(unit);
 
         return ResponseEntity.ok().body(unit);

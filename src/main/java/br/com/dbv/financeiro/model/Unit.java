@@ -30,4 +30,6 @@ public class Unit {
     @JoinColumn(name = "club_id")
     private Club club;
 
+    private Integer deliveryPendingPoints = 0;
+
 }
