@@ -76,8 +76,8 @@ public class PresenceController {
                         countPresences++;
                     }
                 }
-                Integer percent = (100 / countDates.size()) * countPresences;
-                percents.add(new PresencePercentDTO(user, percent));
+                Double percent = (100.00 / countDates.size()) * countPresences;
+                percents.add(new PresencePercentDTO(user, percent.intValue()));
             }
         }
 
