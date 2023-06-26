@@ -31,5 +31,6 @@ public class Unit {
     private Club club;
 
     private Integer deliveryPendingPoints = 0;
+    private Boolean active = Boolean.TRUE;
 
 }
