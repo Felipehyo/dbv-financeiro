@@ -18,6 +18,7 @@ public class EventDTO {
     private Double value;
     private LocalDate date;
     private Long clubId;
+    private Long subscribedUsers;
 
     public Event convert(Club club) {
 
@@ -29,6 +30,14 @@ public class EventDTO {
 
         return event;
 
+    }
+
+    public EventDTO(Event event, Long subscribedUsers){
+        this.name = event.getEvent();
+        this.value = event.getValue();
+        this.date = event.getDate();
+        this.clubId = event.getId();
+        this.subscribedUsers = subscribedUsers;
     }
 
 }

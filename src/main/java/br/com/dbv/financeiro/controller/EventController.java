@@ -24,7 +24,9 @@ public class EventController {
     @GetMapping("/club/{clubId}")
     public ResponseEntity<?> getAllEventsByClub(@PathVariable("clubId") Long clubId) {
 
-        return ResponseEntity.ok().body(repository.findByClubId(clubId));
+//        repository.findByClubId(clubId);
+
+        return ResponseEntity.ok().body(repository.getEventsAndRegisterByClub(clubId));
 
     }
 
