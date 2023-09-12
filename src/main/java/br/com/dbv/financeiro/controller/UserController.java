@@ -27,7 +27,7 @@ public class UserController {
     @Autowired
     private ClubRepository clubRepository;
 
-    @GetMapping("/all/{clubId}")
+    @GetMapping("/club/{clubId}")
     public ResponseEntity<?> getUsersByClub(@PathVariable("clubId") Long id) {
 
         return ResponseEntity.ok().body(repository.findByClubIdAndActive(id, Boolean.TRUE));

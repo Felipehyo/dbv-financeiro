@@ -46,6 +46,13 @@ public class PaymentController {
 
     }
 
+    @GetMapping("/user/{id}")
+    public ResponseEntity<?> getByUser(@PathVariable("id") UUID id) {
+
+        return ResponseEntity.ok().body(repository.findByPathfinderId(id));
+
+    }
+
     @PostMapping
     public ResponseEntity<?> createPayment(@RequestBody PaymentDTO request) {
 
@@ -74,6 +81,9 @@ public class PaymentController {
         Payment payment = request.convert(club.get(), (event != null ? event.get() : null), user.get());
 
         club.get().setBank(club.get().getBank() + request.getValue());
+        if (event == null) {
+            user.get().setBank(user.get().getBank() + request.getValue());
+        }
 
         return ResponseEntity.ok().body(repository.save(payment));
 
