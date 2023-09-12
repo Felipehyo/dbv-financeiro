@@ -55,6 +55,7 @@ public class EventRegisterController {
         }
 
         EventRegister eventRegister = request.convert(event.get(), pathfinder.get());
+        pathfinder.get().setBank(pathfinder.get().getBank() - event.get().getValue());
 
         return ResponseEntity.ok().body(repository.save(eventRegister));
 

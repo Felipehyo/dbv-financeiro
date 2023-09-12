@@ -14,6 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class EventDTO {
 
+    private Long id;
     private String name;
     private Double value;
     private LocalDate date;
@@ -33,6 +34,7 @@ public class EventDTO {
     }
 
     public EventDTO(Event event, Long subscribedUsers){
+        this.id = event.getId();
         this.name = event.getEvent();
         this.value = event.getValue();
         this.date = event.getDate();

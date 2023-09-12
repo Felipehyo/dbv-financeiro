@@ -1,7 +1,7 @@
 spring:
   datasource:
-#    url: jdbc:postgresql://localhost:3306/dbvfinanceiro
-    url: ${DATABASE_URL:jdbc:mysql://localhost:3306/dbvfinanceiro}
+    url: jdbc:postgresql://localhost:3306/dbvfinanceiro
+#    url: ${DATABASE_URL:jdbc:mysql://localhost:3306/dbvfinanceiro}
     username: root
     password: root
     # conexão direta em prod
