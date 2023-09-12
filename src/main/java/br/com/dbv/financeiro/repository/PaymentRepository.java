@@ -13,4 +13,6 @@ public interface PaymentRepository extends JpaRepository<Payment, UUID> {
 
     List<Payment> findByClubId(@PathParam("club_id") Long id);
 
+    List<Payment> findByPathfinderId(@PathParam("pathfinder_id") UUID id);
+
 }

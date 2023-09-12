@@ -9,6 +9,6 @@ public enum FormOfPaymentEnum {
     CHURCH("CHURCH"),
     CASH("CASH");
 
-    public String value;
+    public final String value;
 
 }

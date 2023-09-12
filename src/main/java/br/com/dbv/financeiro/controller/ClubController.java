@@ -1,6 +1,8 @@
 package br.com.dbv.financeiro.controller;
 
+import br.com.dbv.financeiro.dto.ClubBankDTO;
 import br.com.dbv.financeiro.dto.ClubDTO;
+import br.com.dbv.financeiro.dto.ErrorDTO;
 import br.com.dbv.financeiro.model.Club;
 import br.com.dbv.financeiro.repository.ClubRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,19 @@ public class ClubController {
     public ResponseEntity<?> getClub(@PathVariable("id") Long id) {
 
         return ResponseEntity.ok().body(repository.findById(id));
+
+    }
+
+    @GetMapping("/bank/{id}")
+    public ResponseEntity<?> getClubBank(@PathVariable("id") Long id) {
+
+        var club = repository.findById(id);
+
+        if (club.isEmpty()) {
+            return ResponseEntity.badRequest().body(new ErrorDTO("400", "Club not found", "Club not found in database"));
+        }
+
+        return ResponseEntity.ok().body(new ClubBankDTO(club.get().getBank()));
 
     }
 
