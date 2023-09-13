@@ -15,7 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "PATHFINDER")
-public class User {
+public class Pathfinder {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -43,5 +43,11 @@ public class User {
     @Temporal(TemporalType.DATE)
     @Column(name = "Birthdate", nullable = false)
     private Date birthDate;
+
+    private Double bank = 0.0;
+
+    @ManyToOne
+    @JoinColumn(name = "club_id")
+    private Club club;
 
 }

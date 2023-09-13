@@ -1,7 +1,7 @@
 package br.com.dbv.financeiro.dto;
 
 import br.com.dbv.financeiro.enums.PresenceTypeEnum;
-import br.com.dbv.financeiro.model.User;
+import br.com.dbv.financeiro.model.Pathfinder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -10,7 +10,7 @@ import lombok.Data;
 public class PresenceTodayDTO {
 
     private PresenceTypeEnum status;
-    private User user;
+    private Pathfinder user;
 
     public String getUserName(){
         return this.user.getName();

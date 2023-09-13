@@ -33,14 +33,21 @@ public class ActivityRecordDTO {
         record.setCreatedDate(LocalDateTime.now());
         record.setType(type);
 
-        if (!StringUtils.isBlank(reason) && points != 0) {
+        if (activity == null) {
             record.setTitle(title);
             record.setReason(reason);
-            record.setPoints(type == RecordTypeEnum.MERIT ? points : -points);
+            var totalPoints = type == RecordTypeEnum.MERIT ? points : -points;
+            record.setPoints(totalPoints);
+            unit.setQtdPoints(totalPoints);
+            unit.setQtdPoints(totalPoints);
+            unit.setDeliveryPendingPoints(unit.getDeliveryPendingPoints() + totalPoints);
         } else {
             record.setTitle(activity.getName());
             record.setReason(activity.getDescription());
-            record.setPoints(type == RecordTypeEnum.MERIT ? activity.getMerit() : type == RecordTypeEnum.DEMERIT ? -activity.getDemerit() : 0);
+            var totalPoints = type == RecordTypeEnum.MERIT ? activity.getMerit() : type == RecordTypeEnum.DEMERIT ? -activity.getDemerit() : 0;
+            record.setPoints(totalPoints);
+            unit.setQtdPoints(unit.getQtdPoints() + totalPoints);
+            unit.setDeliveryPendingPoints(unit.getDeliveryPendingPoints() + totalPoints);
         }
 
         return record;
