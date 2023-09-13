@@ -1,10 +1,11 @@
 package br.com.dbv.financeiro.controller;
 
 import br.com.dbv.financeiro.dto.ErrorDTO;
-import br.com.dbv.financeiro.dto.PathfinderDTO;
-import br.com.dbv.financeiro.model.User;
+import br.com.dbv.financeiro.dto.UserDTO;
+import br.com.dbv.financeiro.model.Pathfinder;
 import br.com.dbv.financeiro.model.Unit;
-import br.com.dbv.financeiro.repository.PathfinderRepository;
+import br.com.dbv.financeiro.repository.ClubRepository;
+import br.com.dbv.financeiro.repository.UserRepository;
 import br.com.dbv.financeiro.repository.UnitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,41 +15,50 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/user/pathfinder")
-public class PathfinderController {
+@RequestMapping("/user")
+public class UserController {
 
     @Autowired
-    private PathfinderRepository repository;
+    private UserRepository repository;
 
     @Autowired
     private UnitRepository unitRepository;
 
-    @GetMapping()
-    public ResponseEntity<?> getAllUnits() {
+    @Autowired
+    private ClubRepository clubRepository;
 
-        return ResponseEntity.ok().body(repository.findAll());
+    @GetMapping("/club/{clubId}")
+    public ResponseEntity<?> getUsersByClub(@PathVariable("clubId") Long id) {
+
+        return ResponseEntity.ok().body(repository.findByClubIdAndActive(id, Boolean.TRUE));
 
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getPathfinderById(@PathVariable("id") UUID id) {
+    public ResponseEntity<?> getUserById(@PathVariable("id") UUID id) {
 
         return ResponseEntity.ok().body(repository.findById(id));
 
     }
 
     @GetMapping("/unit/{unitId}")
-    public ResponseEntity<?> getPathfinderByUnitId(@PathVariable("unitId") Long unitId) {
+    public ResponseEntity<?> getUserByUnitId(@PathVariable("unitId") Long unitId) {
 
-        return ResponseEntity.ok().body(repository.findByUnitId(unitId));
+        return ResponseEntity.ok().body(repository.findByUnitIdAndActive(unitId, Boolean.TRUE));
 
     }
 
     @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody PathfinderDTO request) {
+    public ResponseEntity<?> createUser(@RequestBody UserDTO request) {
 
         Optional<Unit> unit;
-        User pathfinder;
+        Pathfinder user;
+
+        var club = clubRepository.findById(request.getClubId());
+
+        if (!club.isPresent()) {
+            return ResponseEntity.badRequest().body(new ErrorDTO("400", "Club not found", "Club not found in database"));
+        }
 
         if (request.getUnitId() != null) {
             unit = unitRepository.findById(request.getUnitId());
@@ -57,12 +67,12 @@ public class PathfinderController {
                 return ResponseEntity.badRequest().body(new ErrorDTO("400", "Unit not found", "Unit not found in database"));
             }
 
-            pathfinder = request.convert(unit.get());
+            user = request.convert(unit.get(), club.get());
         } else {
-            pathfinder = request.convert();
+            user = request.convert(club.get());
         }
 
-        return ResponseEntity.ok().body(repository.save(pathfinder));
+        return ResponseEntity.ok().body(repository.save(user));
 
     }
 

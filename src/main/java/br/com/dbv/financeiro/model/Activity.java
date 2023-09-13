@@ -32,4 +32,8 @@ public class Activity {
     private Integer activityOrder;
     private Boolean alwaysDisplay;
 
+    @ManyToOne
+    @JoinColumn(name = "club_id")
+    private Club club;
+
 }

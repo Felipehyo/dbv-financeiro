@@ -1,6 +1,6 @@
 package br.com.dbv.financeiro.model;
 
-import br.com.dbv.financeiro.enums.PresenceTypeEnum;
+import br.com.dbv.financeiro.enums.BookTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,27 +13,25 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "PRESENCE")
-public class Presence {
+@Table(name = "CASH_BOOK")
+public class CashBook {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "pathfinder_id")
-    @NotNull
-    private Pathfinder pathfinder;
-
-    @OneToOne
-    @JoinColumn(name = "kit_id")
-    private Kit kit;
-
-    private LocalDate date;
-    private PresenceTypeEnum presenceType;
-
     @ManyToOne
     @JoinColumn(name = "club_id")
     private Club club;
+
+    @NotNull
+    private BookTypeEnum type;
+
+    @NotNull
+    private String description;
+    
+    private Double value;
+
+    private LocalDate date;
 
 }

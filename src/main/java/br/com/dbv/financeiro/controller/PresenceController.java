@@ -7,12 +7,12 @@ import br.com.dbv.financeiro.dto.PresenceTodayDTO;
 import br.com.dbv.financeiro.enums.PresenceTypeEnum;
 import br.com.dbv.financeiro.model.Kit;
 import br.com.dbv.financeiro.model.Presence;
-import br.com.dbv.financeiro.model.User;
+import br.com.dbv.financeiro.model.Pathfinder;
+import br.com.dbv.financeiro.repository.ClubRepository;
 import br.com.dbv.financeiro.repository.KitRepository;
-import br.com.dbv.financeiro.repository.PathfinderRepository;
+import br.com.dbv.financeiro.repository.UserRepository;
 import br.com.dbv.financeiro.repository.PresenceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,23 +27,38 @@ public class PresenceController {
     private PresenceRepository repository;
 
     @Autowired
-    private PathfinderRepository pathfinderRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private KitRepository kitRepository;
 
-    @GetMapping()
-    public ResponseEntity<?> getAllPresences() {
+    @Autowired
+    private ClubRepository clubRepository;
 
-        return ResponseEntity.ok().body(repository.findAll());
+    @GetMapping("/club/{clubId}")
+    public ResponseEntity<?> getAllPresences(@PathVariable("clubId") Long clubId) {
+
+        var club = clubRepository.findById(clubId);
+
+        if (!club.isPresent()) {
+            return ResponseEntity.badRequest().body(new ErrorDTO("400", "Club not found", "Club not found in database"));
+        }
+
+        return ResponseEntity.ok().body(repository.findByClubId(clubId));
 
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<?> getAllPresencesWithPercent() {
+    @GetMapping("/all/{clubId}")
+    public ResponseEntity<?> getAllPresencesWithPercent(@PathVariable("clubId") Long clubId) {
 
-        List<Presence> all = repository.findAll();
-        List<User> users = pathfinderRepository.findAll();
+        var club = clubRepository.findById(clubId);
+
+        if (!club.isPresent()) {
+            return ResponseEntity.badRequest().body(new ErrorDTO("400", "Club not found", "Club not found in database"));
+        }
+
+        List<Presence> all = repository.findByClubId(clubId);
+        List<Pathfinder> users = userRepository.findByClubIdAndActive(clubId, Boolean.TRUE);
         List<PresencePercentDTO> percents = new ArrayList<>();
         List<String> countDates = new ArrayList<>();
 
@@ -53,15 +68,17 @@ public class PresenceController {
             }
         }
 
-        for (var user : users) {
-            var countPresences = 0;
-            for (var p : all) {
-                if (user.getId().equals(p.getPathfinder().getId()) && p.getPresenceType() == PresenceTypeEnum.PRESENT) {
-                    countPresences++;
+        if (all.size() > 0) {
+            for (var user : users) {
+                var countPresences = 0;
+                for (var p : all) {
+                    if (user.getId().equals(p.getPathfinder().getId()) && p.getPresenceType() == PresenceTypeEnum.PRESENT) {
+                        countPresences++;
+                    }
                 }
+                Double percent = (100.00 / countDates.size()) * countPresences;
+                percents.add(new PresencePercentDTO(user, percent.intValue()));
             }
-            Integer percent = (100 / countDates.size()) * countPresences;
-            percents.add(new PresencePercentDTO(user, percent));
         }
 
         percents.sort(Comparator.comparing(PresencePercentDTO::getUserName));
@@ -70,12 +87,18 @@ public class PresenceController {
 
     }
 
-    @GetMapping("/today")
-    public ResponseEntity<?> getAllPresencesToday() {
+    @GetMapping("/today/{clubId}")
+    public ResponseEntity<?> getAllPresencesToday(@PathVariable("clubId") Long clubId) {
 
-        List<User> allUsers = pathfinderRepository.findAll();
+        var club = clubRepository.findById(clubId);
 
-        List<Presence> presenceToday = repository.findByDateEquals(LocalDate.now());
+        if (!club.isPresent()) {
+            return ResponseEntity.badRequest().body(new ErrorDTO("400", "Club not found", "Club not found in database"));
+        }
+
+        List<Pathfinder> allUsers = userRepository.findByClubIdAndActive(clubId, Boolean.TRUE);
+
+        List<Presence> presenceToday = repository.findByClubIdAndDateEquals(clubId, LocalDate.now());
 
         List<PresenceTodayDTO> presenceList = new ArrayList<>();
 
@@ -112,7 +135,7 @@ public class PresenceController {
     @PostMapping("/{userId}")
     public ResponseEntity<?> createPresence(@PathVariable("userId") UUID userId, @RequestBody PresenceDTO request) {
 
-        Optional<User> pathfinder = pathfinderRepository.findById(userId);
+        Optional<Pathfinder> pathfinder = userRepository.findById(userId);
 
         if (!pathfinder.isPresent()) {
             return ResponseEntity.badRequest().body(new ErrorDTO("400", "Pathfinder not found", "Pathfinder not found in database"));
@@ -136,7 +159,7 @@ public class PresenceController {
                 kit.setActivityNotebook(Boolean.FALSE);
                 kitRepository.save(kit);
             }
-            Presence presence = request.convert(pathfinder.get(), kit);
+            Presence presence = request.convert(pathfinder.get(), kit, pathfinder.get().getClub());
             return ResponseEntity.ok().body(repository.save(presence));
         } else {
             if (request.getPresenceType() == PresenceTypeEnum.PRESENT) {
@@ -164,16 +187,6 @@ public class PresenceController {
             oldPresence.get().setPresenceType(request.getPresenceType());
             return ResponseEntity.ok().body(repository.save(oldPresence.get()));
         }
-
-    }
-
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePresence(@PathVariable("id") Long id) {
-
-        repository.delete(repository.findById(id).get());
-
-        return new ResponseEntity<>(HttpStatus.OK);
 
     }
 

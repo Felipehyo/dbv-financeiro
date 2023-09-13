@@ -1,7 +1,9 @@
 package br.com.dbv.financeiro.controller;
 
+import br.com.dbv.financeiro.dto.ErrorDTO;
 import br.com.dbv.financeiro.dto.UnitDTO;
 import br.com.dbv.financeiro.model.Unit;
+import br.com.dbv.financeiro.repository.ClubRepository;
 import br.com.dbv.financeiro.repository.UnitRepository;
 import io.micrometer.core.instrument.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +18,26 @@ public class UnitController {
     @Autowired
     private UnitRepository repository;
 
+    @Autowired
+    private ClubRepository clubRepository;
+
     @GetMapping()
     public ResponseEntity<?> getAllUnits() {
 
         return ResponseEntity.ok().body(repository.findAll());
+
+    }
+
+    @GetMapping("/club/{clubId}")
+    public ResponseEntity<?> getUnitsByClub(@PathVariable("clubId") Long clubId) {
+
+        var club = clubRepository.findById(clubId);
+
+        if (!club.isPresent()) {
+            return ResponseEntity.badRequest().body(new ErrorDTO("400", "Club not found", "Club not found in database"));
+        }
+
+        return ResponseEntity.ok().body(repository.findByClubId(clubId));
 
     }
 
@@ -33,7 +51,13 @@ public class UnitController {
     @PostMapping
     public ResponseEntity<?> createUnit(@RequestBody UnitDTO request) {
 
-        Unit units = request.convert();
+        var club = clubRepository.findById(request.getClubId());
+
+        if (!club.isPresent()) {
+            return ResponseEntity.badRequest().body(new ErrorDTO("400", "Club not found", "Club not found in database"));
+        }
+
+        Unit units = request.convert(club.get());
 
         return ResponseEntity.ok().body(repository.save(units));
 
@@ -56,9 +80,15 @@ public class UnitController {
     @PatchMapping("/{id}/add/{qtdPoints}")
     public ResponseEntity<?> addPoints(@PathVariable("id") Long id, @PathVariable("qtdPoints") Integer qtdPoints) {
 
-        var unit = repository.findById(id).get();
-        unit.setQtdPoints(unit.getQtdPoints() + qtdPoints);
-        repository.save(unit);
+        Unit unit;
+
+        try {
+            unit = repository.findById(id).get();
+            unit.setQtdPoints(unit.getQtdPoints() + qtdPoints);
+            repository.save(unit);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new ErrorDTO("100", "Not permitted", "Not permitted"));
+        }
 
         return ResponseEntity.ok().body(unit);
 
@@ -67,8 +97,36 @@ public class UnitController {
     @PatchMapping("/{id}/remove/{qtdPoints}")
     public ResponseEntity<?> removePoints(@PathVariable("id") Long id, @PathVariable("qtdPoints") Integer qtdPoints) {
 
+        Unit unit;
+
+        try {
+            unit = repository.findById(id).get();
+            unit.setQtdPoints(unit.getQtdPoints() - qtdPoints);
+            repository.save(unit);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new ErrorDTO("100", "Not permitted", "Not permitted"));
+        }
+
+        return ResponseEntity.ok().body(unit);
+
+    }
+
+    @PatchMapping("/{id}/pendency-deposit/{qtdPoints}")
+    public ResponseEntity<?> addPendencyPoints(@PathVariable("id") Long id, @PathVariable("qtdPoints") Integer qtdPoints) {
+
         var unit = repository.findById(id).get();
-        unit.setQtdPoints(unit.getQtdPoints() - qtdPoints);
+        unit.setDeliveryPendingPoints(unit.getDeliveryPendingPoints() - qtdPoints);
+        repository.save(unit);
+
+        return ResponseEntity.ok().body(unit);
+
+    }
+
+    @PatchMapping("/{id}/pendency-recall/{qtdPoints}")
+    public ResponseEntity<?> removePendencyPoints(@PathVariable("id") Long id, @PathVariable("qtdPoints") Integer qtdPoints) {
+
+        var unit = repository.findById(id).get();
+        unit.setDeliveryPendingPoints(unit.getDeliveryPendingPoints() + qtdPoints);
         repository.save(unit);
 
         return ResponseEntity.ok().body(unit);
