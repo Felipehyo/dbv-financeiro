@@ -1,13 +1,10 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:3306/dbvfinanceiro
-#    url: ${DATABASE_URL:jdbc:mysql://localhost:3306/dbvfinanceiro}
+#    url: jdbc:postgresql://localhost:3306/dbvfinanceiro
+#    url: jdbc:mysql://localhost:3306/dbvfinanceiro
+    url: ${DATABASE_URL}
     username: root
     password: root
-    # conexão direta em prod
-#    url: jdbc:postgresql://ec2-44-195-169-163.compute-1.amazonaws.com:5432/d3vnjhn8orddsh
-#    username: hatmdmgfcgamhc
-#    password: 2868395ffb6d42fce4813fba700192a2b0b4b666a415e56924191db9f0da676f
   jpa:
     hibernate.ddl-auto: update
     generate-ddl: false
@@ -16,6 +13,5 @@ spring:
     cache: true
 
 server:
-  #port: 8080
   servlet:
     context-path: "/pathfinders"
