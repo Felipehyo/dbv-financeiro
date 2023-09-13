@@ -2,6 +2,7 @@ package br.com.dbv.financeiro.controller;
 
 import br.com.dbv.financeiro.dto.CashBookDTO;
 import br.com.dbv.financeiro.dto.ErrorDTO;
+import br.com.dbv.financeiro.dto.reponse.CashBookResponseDTO;
 import br.com.dbv.financeiro.enums.BookTypeEnum;
 import br.com.dbv.financeiro.model.CashBook;
 import br.com.dbv.financeiro.repository.CashBookRepository;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/cash-book")
@@ -31,7 +34,15 @@ public class CashBookController {
     @GetMapping("/{clubId}")
     public ResponseEntity<?> getCashBookByClub(@PathVariable("clubId") Long id) {
 
-        return ResponseEntity.ok().body(repository.findByClubId(id));
+        var cashBookList = repository.findByClubId(id);
+
+        var responseList = new ArrayList<>();
+
+        for (var cashBook : cashBookList) {
+            responseList.add(new CashBookResponseDTO(cashBook));
+        }
+
+        return ResponseEntity.ok().body(responseList);
 
     }
 

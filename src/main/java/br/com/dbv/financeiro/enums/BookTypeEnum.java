@@ -1,13 +1,15 @@
 package br.com.dbv.financeiro.enums;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @AllArgsConstructor
+@Getter
 public enum BookTypeEnum {
 
-    INPUT("INPUT"),
-    OUTPUT("OUTPUT");
+    INPUT("Entrada"),
+    OUTPUT("Saída");
 
-    public String value;
+    private final String value;
 
 }
