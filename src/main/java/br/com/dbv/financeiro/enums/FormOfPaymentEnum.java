@@ -5,10 +5,11 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum FormOfPaymentEnum {
 
-    PIX("PIX"),
-    CHURCH("CHURCH"),
-    CASH("CASH");
+    PIX("PIX", "Pix"),
+    CHURCH("CHURCH", "Igreja"),
+    CASH("CASH", "Dinheiro");
 
     public final String value;
+    public final String description;
 
 }

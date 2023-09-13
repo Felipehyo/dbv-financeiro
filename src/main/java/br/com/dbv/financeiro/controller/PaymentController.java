@@ -2,6 +2,7 @@ package br.com.dbv.financeiro.controller;
 
 import br.com.dbv.financeiro.dto.ErrorDTO;
 import br.com.dbv.financeiro.dto.PaymentDTO;
+import br.com.dbv.financeiro.dto.reponse.PaymentResponseDTO;
 import br.com.dbv.financeiro.model.Event;
 import br.com.dbv.financeiro.model.Payment;
 import br.com.dbv.financeiro.repository.ClubRepository;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,7 +37,13 @@ public class PaymentController {
     @GetMapping("/club/{clubId}")
     public ResponseEntity<?> getAllPaymentsByClub(@PathVariable("clubId") Long clubId) {
 
-        return ResponseEntity.ok().body(repository.findByClubId(clubId));
+        var payments = repository.findByClubId(clubId);
+
+        var paymentsResponse = new ArrayList<>();
+
+        payments.forEach( p -> paymentsResponse.add(new PaymentResponseDTO(p)));
+
+        return ResponseEntity.ok().body(paymentsResponse);
 
     }
 
