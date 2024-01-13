@@ -1,5 +1,6 @@
 package br.com.dbv.financeiro.model;
 
+import br.com.dbv.financeiro.enums.GenderEnum;
 import br.com.dbv.financeiro.enums.UserTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -49,5 +50,8 @@ public class Pathfinder {
     @ManyToOne
     @JoinColumn(name = "club_id")
     private Club club;
+
+    @Column(name = "gender", length = 12, nullable = false)
+    private GenderEnum gender;
 
 }

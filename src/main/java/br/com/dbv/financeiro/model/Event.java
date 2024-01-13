@@ -30,4 +30,6 @@ public class Event {
     @JoinColumn(name = "club_id")
     private Club club;
 
+    private Double bank;
+
 }

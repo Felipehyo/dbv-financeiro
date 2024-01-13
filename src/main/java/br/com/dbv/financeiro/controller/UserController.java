@@ -60,6 +60,12 @@ public class UserController {
             return ResponseEntity.badRequest().body(new ErrorDTO("400", "Club not found", "Club not found in database"));
         }
 
+        var oldUser = repository.findByName(request.getName());
+
+        if (oldUser.isPresent()) {
+            return ResponseEntity.badRequest().body(new ErrorDTO("400", "User already exists", "User already exists"));
+        }
+
         if (request.getUnitId() != null) {
             unit = unitRepository.findById(request.getUnitId());
 

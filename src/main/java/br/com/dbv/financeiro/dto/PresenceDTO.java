@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 @Data
 @AllArgsConstructor
@@ -23,7 +24,7 @@ public class PresenceDTO {
 
         Presence presence = new Presence();
         presence.setPathfinder(pathfinder);
-        presence.setDate(LocalDate.now());
+        presence.setDate(LocalDate.now(ZoneId.of("America/Sao_Paulo")));
         presence.setKit(kit);
         presence.setPresenceType(presenceType);
         presence.setClub(club);

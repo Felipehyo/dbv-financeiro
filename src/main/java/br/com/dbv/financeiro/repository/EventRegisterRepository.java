@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.websocket.server.PathParam;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -13,6 +14,6 @@ public interface EventRegisterRepository extends JpaRepository<EventRegister, Lo
 
     List<EventRegister> findByEventId(@PathParam("event_id") Long id);
 
-    EventRegister findByEventIdAndPathfinderId(@PathParam("event_id") Long id, @PathParam("pathfinder_id") UUID pathfinderId);
+    Optional<EventRegister> findByEventIdAndPathfinderId(@PathParam("event_id") Long id, @PathParam("pathfinder_id") UUID pathfinderId);
 
 }

@@ -1,5 +1,6 @@
 package br.com.dbv.financeiro.dto;
 
+import br.com.dbv.financeiro.enums.GenderEnum;
 import br.com.dbv.financeiro.enums.UserTypeEnum;
 import br.com.dbv.financeiro.model.Club;
 import br.com.dbv.financeiro.model.Pathfinder;
@@ -20,6 +21,7 @@ public class UserDTO {
     private Long unitId;
     private Date birthDate;
     private Long clubId;
+    private GenderEnum gender;
 
     public Pathfinder convert(Unit unit, Club club) {
 
@@ -29,6 +31,7 @@ public class UserDTO {
         user.setUnit(unit);
         user.setBirthDate(birthDate);
         user.setClub(club);
+        user.setGender(gender);
 
         return user;
     }
@@ -40,6 +43,7 @@ public class UserDTO {
         user.setUserType(this.userType);
         user.setBirthDate(birthDate);
         user.setClub(club);
+        user.setGender(gender);
 
         return user;
     }

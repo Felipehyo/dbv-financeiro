@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 @RestController
@@ -98,7 +99,7 @@ public class PresenceController {
 
         List<Pathfinder> allUsers = userRepository.findByClubIdAndActive(clubId, Boolean.TRUE);
 
-        List<Presence> presenceToday = repository.findByClubIdAndDateEquals(clubId, LocalDate.now());
+        List<Presence> presenceToday = repository.findByClubIdAndDateEquals(clubId, LocalDate.now(ZoneId.of("America/Sao_Paulo")));
 
         List<PresenceTodayDTO> presenceList = new ArrayList<>();
 
@@ -143,7 +144,7 @@ public class PresenceController {
 
         Kit kit;
 
-        Optional<Presence> oldPresence = repository.findByPathfinderIdAndDateEquals(userId, LocalDate.now());
+        Optional<Presence> oldPresence = repository.findByPathfinderIdAndDateEquals(userId, LocalDate.now(ZoneId.of("America/Sao_Paulo")));
 
         if (!oldPresence.isPresent()) {
             if (request.getPresenceType() == PresenceTypeEnum.PRESENT) {

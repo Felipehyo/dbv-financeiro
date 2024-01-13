@@ -15,6 +15,7 @@ public interface UserRepository extends JpaRepository<Pathfinder, UUID> {
     List<Optional<Pathfinder>> findByUnitIdAndActive(Long id, Boolean active);
 
     Optional<Pathfinder> findByEmailAndActive(String email, Boolean active);
+    Optional<Pathfinder> findByName(String name);
 
     List<Pathfinder> findByClubIdAndActive(@PathParam("club_id") Long id, Boolean active);
 

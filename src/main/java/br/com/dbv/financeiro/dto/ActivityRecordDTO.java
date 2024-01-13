@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 @Data
@@ -29,8 +30,8 @@ public class ActivityRecordDTO {
         ActivityRecord record = new ActivityRecord();
         record.setUnit(unit);
         record.setActivity(activity);
-        record.setDate(LocalDate.now());
-        record.setCreatedDate(LocalDateTime.now());
+        record.setDate(LocalDate.now(ZoneId.of("America/Sao_Paulo")));
+        record.setCreatedDate(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
         record.setType(type);
 
         if (activity == null) {

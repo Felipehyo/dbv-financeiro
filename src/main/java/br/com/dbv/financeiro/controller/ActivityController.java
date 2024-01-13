@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,12 +59,12 @@ public class ActivityController {
             return ResponseEntity.badRequest().body(new ErrorDTO("400", "Unit not found", "Unit not found in database"));
         }
 
-        List<Optional<ActivityRecord>> allRecords = activityRecordRepository.findByUnitIdAndDateEquals(unitId, LocalDate.now());
+        List<Optional<ActivityRecord>> allRecords = activityRecordRepository.findByUnitIdAndDateEquals(unitId, LocalDate.now(ZoneId.of("America/Sao_Paulo")));
         List<Activity> activities = repository.findAll();
 
         for (Activity activity : repository.findAll()) {
             for (Optional<ActivityRecord> record : allRecords) {
-                if (record.get().getActivity() != null && record.get().getActivity().getId() == activity.getId() && record.get().getDate().equals(LocalDate.now()) && !activity.getAlwaysDisplay()) {
+                if (record.get().getActivity() != null && record.get().getActivity().getId() == activity.getId() && record.get().getDate().equals(LocalDate.now(ZoneId.of("America/Sao_Paulo"))) && !activity.getAlwaysDisplay()) {
                     activities.remove(activity);
                     break;
                 }

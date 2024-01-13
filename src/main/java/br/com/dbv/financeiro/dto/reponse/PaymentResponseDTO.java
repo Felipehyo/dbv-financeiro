@@ -1,6 +1,6 @@
 package br.com.dbv.financeiro.dto.reponse;
 
-import br.com.dbv.financeiro.dto.EventDTO;
+import br.com.dbv.financeiro.dto.event.EventDTO;
 import br.com.dbv.financeiro.dto.UserDTO;
 import br.com.dbv.financeiro.model.Payment;
 import lombok.Data;

@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -134,7 +135,7 @@ public class ActivityRecordController {
             try {
                 activity = activitiesRepository.findById(activityId).get();
 
-                ActivityRecord response = repository.findByUnitIdAndDateEqualsAndActivityId(unitId, LocalDate.now(), activity.getId());
+                ActivityRecord response = repository.findByUnitIdAndDateEqualsAndActivityId(unitId, LocalDate.now(ZoneId.of("America/Sao_Paulo")), activity.getId());
                 if (response != null) {
                     return ResponseEntity.badRequest().body(new ErrorDTO("001", "Activity already registered ", "Activity already registered in database"));
                 }
