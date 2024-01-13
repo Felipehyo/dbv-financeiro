@@ -51,7 +51,7 @@ public class Pathfinder {
     @JoinColumn(name = "club_id")
     private Club club;
 
-    @Column(name = "gender", length = 12, nullable = false)
+    @Column(name = "gender", length = 12)
     private GenderEnum gender;
 
 }
