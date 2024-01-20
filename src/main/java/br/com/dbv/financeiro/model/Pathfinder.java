@@ -44,7 +44,7 @@ public class Pathfinder {
     private Boolean active = Boolean.TRUE;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "Birthdate", nullable = false)
+    @Column(name = "Birthdate")
     private Date birthDate;
 
     private Double bank = 0.0;

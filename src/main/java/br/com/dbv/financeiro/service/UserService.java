@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -57,6 +58,10 @@ public class UserService {
             user = this.convertDtoToUser(request, club.get(), unit.get());
         } else {
             user = this.convertDtoToUser(request, club.get(), null);
+        }
+
+        if (user.getBirthDate() == null) {
+            user.setBirthDate(new Date());
         }
 
         var userDTO = convertUserToDTO(repository.save(user));
