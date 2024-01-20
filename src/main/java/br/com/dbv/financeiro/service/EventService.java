@@ -126,21 +126,14 @@ public class EventService {
                     .build());
         }
 
+        if (request.getRegisterType().equals(EventTypeRegisterEnum.SUBSCRIBE)) {
+            eventRegisterRepository.save(eventRegister);
+            return EventRegisterMapper.convert(eventRegister, userEventBankRepository);
+        } else {
+            eventRegisterRepository.delete(eventRegister);
+            return null;
+        }
 
-        if(request.getRegisterType().
-
-    equals(EventTypeRegisterEnum.SUBSCRIBE))
-
-    {
-        eventRegisterRepository.save(eventRegister);
-        return EventRegisterMapper.convert(eventRegister, userEventBankRepository);
-    } else
-
-    {
-        eventRegisterRepository.delete(eventRegister);
-        return null;
     }
-
-}
 
 }

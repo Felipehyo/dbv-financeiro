@@ -24,6 +24,10 @@ public class LoginController {
     @PostMapping
     public ResponseEntity<?> doLogin(@RequestBody LoginDTO request) {
 
+        if (request.getEmail().isBlank() || request.getPassword().isBlank()) {
+            return ResponseEntity.badRequest().body(new ErrorDTO("400", "User not found", "User not found in database"));
+        }
+
         Optional<Pathfinder> user = repository.findByEmailAndActive(request.getEmail(), Boolean.TRUE);
 
         if (!user.isPresent()) {

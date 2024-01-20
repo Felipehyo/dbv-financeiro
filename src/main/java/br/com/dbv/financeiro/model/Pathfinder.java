@@ -3,6 +3,7 @@ package br.com.dbv.financeiro.model;
 import br.com.dbv.financeiro.enums.GenderEnum;
 import br.com.dbv.financeiro.enums.UserTypeEnum;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
@@ -12,6 +13,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity

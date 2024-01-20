@@ -8,7 +8,7 @@ public enum UserTypeEnum {
     EXECUTIVE("Executive"),
     DIRECTION("Direction"),
     PATHFINDER("Pathfinder"),
-    RESPONSIBLE("Responsible");
+    EVENTUAL("Eventual");
 
     public String description;
 

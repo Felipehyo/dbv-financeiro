@@ -59,7 +59,7 @@ public class PresenceController {
         }
 
         List<Presence> all = repository.findByClubId(clubId);
-        List<Pathfinder> users = userRepository.findByClubIdAndActive(clubId, Boolean.TRUE);
+        List<Pathfinder> users = userRepository.findByClubIdAndActiveOrderByName(clubId, Boolean.TRUE);
         List<PresencePercentDTO> percents = new ArrayList<>();
         List<String> countDates = new ArrayList<>();
 
@@ -97,7 +97,7 @@ public class PresenceController {
             return ResponseEntity.badRequest().body(new ErrorDTO("400", "Club not found", "Club not found in database"));
         }
 
-        List<Pathfinder> allUsers = userRepository.findByClubIdAndActive(clubId, Boolean.TRUE);
+        List<Pathfinder> allUsers = userRepository.findByClubIdAndActiveOrderByName(clubId, Boolean.TRUE);
 
         List<Presence> presenceToday = repository.findByClubIdAndDateEquals(clubId, LocalDate.now(ZoneId.of("America/Sao_Paulo")));
 

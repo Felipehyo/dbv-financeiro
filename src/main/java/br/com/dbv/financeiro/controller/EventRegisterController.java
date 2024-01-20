@@ -9,6 +9,7 @@ import br.com.dbv.financeiro.repository.EventRepository;
 import br.com.dbv.financeiro.repository.UserEventBankRepository;
 import br.com.dbv.financeiro.repository.UserRepository;
 import br.com.dbv.financeiro.service.EventService;
+import br.com.dbv.financeiro.service.UserService;
 import br.com.dbv.financeiro.service.mapper.EventRegisterMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,9 @@ public class EventRegisterController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private UserEventBankRepository userEventBankRepository;
@@ -60,7 +64,7 @@ public class EventRegisterController {
             return ResponseEntity.badRequest().body("error");
         }
 
-        var users = userRepository.findByClubIdAndActive(clubId, Boolean.TRUE);
+        var users = userService.getUsersByClubWithEventualUsers(clubId, Boolean.TRUE, Boolean.TRUE);
 
         ArrayList<ResponseEventUserSubscribeDTO> responseList = new ArrayList<>();
 
@@ -79,6 +83,7 @@ public class EventRegisterController {
                             .user(user.getName())
                             .userGender(user.getGender())
                             .subscribed(subscribed)
+                            .userType(user.getUserType())
                             .build());
                 }
         );

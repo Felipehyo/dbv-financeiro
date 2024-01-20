@@ -1,17 +1,14 @@
 package br.com.dbv.financeiro.controller;
 
-import br.com.dbv.financeiro.dto.ErrorDTO;
 import br.com.dbv.financeiro.dto.UserDTO;
-import br.com.dbv.financeiro.model.Pathfinder;
-import br.com.dbv.financeiro.model.Unit;
-import br.com.dbv.financeiro.repository.ClubRepository;
+import br.com.dbv.financeiro.exception.CustomException;
 import br.com.dbv.financeiro.repository.UserRepository;
-import br.com.dbv.financeiro.repository.UnitRepository;
+import br.com.dbv.financeiro.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import javax.websocket.server.PathParam;
 import java.util.UUID;
 
 @RestController
@@ -22,109 +19,65 @@ public class UserController {
     private UserRepository repository;
 
     @Autowired
-    private UnitRepository unitRepository;
-
-    @Autowired
-    private ClubRepository clubRepository;
-
-    @GetMapping("/club/{clubId}")
-    public ResponseEntity<?> getUsersByClub(@PathVariable("clubId") Long id) {
-
-        return ResponseEntity.ok().body(repository.findByClubIdAndActive(id, Boolean.TRUE));
-
-    }
+    private UserService service;
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable("id") UUID id) {
 
-        return ResponseEntity.ok().body(repository.findById(id));
+        try {
+            return ResponseEntity.ok().body(service.getUsersById(id));
+        } catch (CustomException e) {
+            return ResponseEntity.badRequest().body(e.getError());
+        }
+
+    }
+
+    @GetMapping("/club/{clubId}")
+    public ResponseEntity<?> getUsersByClub(@PathVariable("clubId") Long id, @PathParam("eventualUser") Boolean eventualUser, @PathParam("onlyActives") Boolean onlyActives) {
+
+        return ResponseEntity.ok().body(service.getUsersByClubWithEventualUsers(id, eventualUser, onlyActives));
 
     }
 
     @GetMapping("/unit/{unitId}")
     public ResponseEntity<?> getUserByUnitId(@PathVariable("unitId") Long unitId) {
 
-        return ResponseEntity.ok().body(repository.findByUnitIdAndActive(unitId, Boolean.TRUE));
+        return ResponseEntity.ok().body(service.getUserByUnitId(unitId));
 
     }
 
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody UserDTO request) {
 
-        Optional<Unit> unit;
-        Pathfinder user;
-
-        var club = clubRepository.findById(request.getClubId());
-
-        if (!club.isPresent()) {
-            return ResponseEntity.badRequest().body(new ErrorDTO("400", "Club not found", "Club not found in database"));
+        try {
+            return ResponseEntity.ok().body(service.createUser(request));
+        } catch (CustomException e) {
+            return ResponseEntity.badRequest().body(e.getError());
         }
-
-        var oldUser = repository.findByName(request.getName());
-
-        if (oldUser.isPresent()) {
-            return ResponseEntity.badRequest().body(new ErrorDTO("400", "User already exists", "User already exists"));
-        }
-
-        if (request.getUnitId() != null) {
-            unit = unitRepository.findById(request.getUnitId());
-
-            if (!unit.isPresent()) {
-                return ResponseEntity.badRequest().body(new ErrorDTO("400", "Unit not found", "Unit not found in database"));
-            }
-
-            user = request.convert(unit.get(), club.get());
-        } else {
-            user = request.convert(club.get());
-        }
-
-        return ResponseEntity.ok().body(repository.save(user));
 
     }
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<?> putUnit(@PathVariable("id") Long id, @RequestBody UnitDTO request) {
-//
-//        var unit = repository.findById(id).get();
-//        if (!StringUtils.isBlank(request.getName())) unit.setName(request.getName());
-//        if (request.getQtdPoints() != null && request.getQtdPoints() >= 0)
-//            unit.setQtdPoints(request.getQtdPoints());
-//
-//        repository.save(unit);
-//
-//        return ResponseEntity.ok().body(unit);
-//
-//    }
-//
-//    @PatchMapping("/{id}/add/{qtdPoints}")
-//    public ResponseEntity<?> addPoints(@PathVariable("id") Long id, @PathVariable("qtdPoints") Integer qtdPoints) {
-//
-//        var unit = repository.findById(id).get();
-//        unit.setQtdPoints(unit.getQtdPoints() + qtdPoints);
-//        repository.save(unit);
-//
-//        return ResponseEntity.ok().body(unit);
-//
-//    }
-//
-//    @PatchMapping("/{id}/remove/{qtdPoints}")
-//    public ResponseEntity<?> removePoints(@PathVariable("id") Long id, @PathVariable("qtdPoints") Integer qtdPoints) {
-//
-//        var unit = repository.findById(id).get();
-//        unit.setQtdPoints(unit.getQtdPoints() - qtdPoints);
-//        repository.save(unit);
-//
-//        return ResponseEntity.ok().body(unit);
-//
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<?> deleteUnit(@PathVariable("id") Long id) {
-//
-//        repository.delete(repository.findById(id).get());
-//
-//        return new ResponseEntity<>(HttpStatus.OK);
-//
-//    }
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable("id") UUID userId, @RequestBody UserDTO request) {
+
+        try {
+            return ResponseEntity.ok().body(service.updateUser(userId, request));
+        } catch (CustomException e) {
+            return ResponseEntity.badRequest().body(e.getError());
+        }
+
+    }
+
+    @PatchMapping("/{id}/update-status")
+    public ResponseEntity<?> activeOrInactiveUser(@PathVariable("id") UUID userId) {
+
+        try {
+            service.activeOrInactiveUser(userId);
+            return ResponseEntity.noContent().build();
+        } catch (CustomException e) {
+            return ResponseEntity.badRequest().body(e.getError());
+        }
+
+    }
 
 }
