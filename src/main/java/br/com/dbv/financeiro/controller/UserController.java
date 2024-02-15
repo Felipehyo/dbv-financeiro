@@ -1,6 +1,7 @@
 package br.com.dbv.financeiro.controller;
 
 import br.com.dbv.financeiro.dto.UserDTO;
+import br.com.dbv.financeiro.enums.UserTypeEnum;
 import br.com.dbv.financeiro.exception.CustomException;
 import br.com.dbv.financeiro.repository.UserRepository;
 import br.com.dbv.financeiro.service.UserService;
@@ -36,6 +37,17 @@ public class UserController {
     public ResponseEntity<?> getUsersByClub(@PathVariable("clubId") Long id, @PathParam("eventualUser") Boolean eventualUser, @PathParam("onlyActives") Boolean onlyActives) {
 
         return ResponseEntity.ok().body(service.getUsersByClubWithEventualUsers(id, eventualUser, onlyActives));
+
+    }
+
+    @GetMapping("/club/{clubId}/type")
+    public ResponseEntity<?> getUsersByClub(@PathVariable("clubId") Long id, @PathParam("userType") UserTypeEnum userType) {
+
+        try {
+            return ResponseEntity.ok().body(service.getUsersByClubAndUserType(id, userType));
+        } catch (CustomException e) {
+            return ResponseEntity.badRequest().body(e.getError());
+        }
 
     }
 

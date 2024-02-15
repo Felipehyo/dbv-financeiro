@@ -14,10 +14,7 @@ import io.micrometer.core.instrument.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -188,6 +185,26 @@ public class UserService {
 
     }
 
+    public ArrayList<UserDTO> getUsersByClubAndUserType(Long id, UserTypeEnum userType) throws CustomException {
+
+        if (userType == null) {
+            throw new CustomException(new ErrorDTO("400", "Invalid User Type", "Invalid User Type"));
+        }
+
+        ArrayList<Pathfinder> users;
+
+        if (UserTypeEnum.DIRECTION.equals(userType) || UserTypeEnum.EXECUTIVE.equals(userType)) {
+            users = repository.findByClubIdAndUserTypeInOrderByName(id, Arrays.asList(UserTypeEnum.DIRECTION, UserTypeEnum.EXECUTIVE));
+        } else {
+            users = repository.findByClubIdAndUserTypeInOrderByName(id, Arrays.asList(userType));
+        }
+
+        ArrayList<UserDTO> userList = new ArrayList<>();
+
+        users.forEach(user -> userList.add(convertUserToDTO(user)));
+
+        return userList;
+    }
 
     private UserDTO convertUserToDTO(Pathfinder user) {
 

@@ -22,5 +22,6 @@ public interface UserRepository extends JpaRepository<Pathfinder, UUID> {
     ArrayList<Pathfinder> findByClubIdAndUserTypeNotOrderByName(Long id, UserTypeEnum eventual);
     ArrayList<Pathfinder> findByClubIdAndActiveOrderByName(Long id, Boolean active);
     ArrayList<Pathfinder> findByClubIdOrderByName(Long id);
+    ArrayList<Pathfinder> findByClubIdAndUserTypeInOrderByName(Long id, List<UserTypeEnum> userTypes);
 
 }
