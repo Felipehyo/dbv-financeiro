@@ -34,9 +34,10 @@ public class UserController {
     }
 
     @GetMapping("/club/{clubId}")
-    public ResponseEntity<?> getUsersByClub(@PathVariable("clubId") Long id, @PathParam("eventualUser") Boolean eventualUser, @PathParam("onlyActives") Boolean onlyActives) {
+    public ResponseEntity<?> getUsersByClub(@PathVariable("clubId") Long id, @PathParam("eventualUser") Boolean eventualUser, @PathParam("onlyActives") Boolean onlyActives,
+                                            @PathParam("boxGreaterZero") Boolean boxGreaterZero) {
 
-        return ResponseEntity.ok().body(service.getUsersByClubWithEventualUsers(id, eventualUser, onlyActives));
+        return ResponseEntity.ok().body(service.getUsersByClubWithEventualUsers(id, eventualUser, onlyActives, boxGreaterZero));
 
     }
 

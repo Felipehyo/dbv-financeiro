@@ -64,7 +64,7 @@ public class EventRegisterController {
             return ResponseEntity.badRequest().body("error");
         }
 
-        var users = userService.getUsersByClubWithEventualUsers(clubId, Boolean.TRUE, Boolean.TRUE);
+        var users = userService.getUsersByClubWithEventualUsers(clubId, Boolean.TRUE, Boolean.TRUE, null);
 
         ArrayList<ResponseEventUserSubscribeDTO> responseList = new ArrayList<>();
 

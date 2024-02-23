@@ -137,11 +137,16 @@ public class UserService {
         return convertUserToDTO(user.get());
     }
 
-    public ArrayList<UserDTO> getUsersByClubWithEventualUsers(Long id, Boolean eventualUser, Boolean onlyActives) {
+    public ArrayList<UserDTO> getUsersByClubWithEventualUsers(Long id, Boolean eventualUser, Boolean onlyActives, Boolean boxGreaterZero) {
 
         var userOptionalList = new ArrayList<Pathfinder>();
 
-        if (eventualUser != null && eventualUser) {
+        if (boxGreaterZero != null && boxGreaterZero) {
+            if (onlyActives == null || onlyActives)
+                userOptionalList = repository.findByClubIdAndActiveAndBankGreaterThanOrderByName(id, Boolean.TRUE, 0.0);
+            else
+                userOptionalList = repository.findByClubIdAndBankGreaterThanOrderByName(id, 0.0);
+        } else if (eventualUser != null && eventualUser) {
             if (onlyActives == null || onlyActives)
                 userOptionalList = repository.findByClubIdAndActiveOrderByName(id, Boolean.TRUE);
             else
