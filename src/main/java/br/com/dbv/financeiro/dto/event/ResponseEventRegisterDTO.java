@@ -2,6 +2,7 @@ package br.com.dbv.financeiro.dto.event;
 
 
 import br.com.dbv.financeiro.enums.GenderEnum;
+import br.com.dbv.financeiro.enums.UserTypeEnum;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,6 +22,7 @@ public class ResponseEventRegisterDTO {
     private UUID userId;
     private String user;
     private GenderEnum userGender;
+    private String userType;
     private Double userBank;
     private Double eventAllocatedAmount;
     private Double percentagePayment;

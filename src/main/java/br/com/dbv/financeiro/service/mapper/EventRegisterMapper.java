@@ -22,6 +22,7 @@ public class EventRegisterMapper {
                 .user(eventRegister.getPathfinder().getName())
                 .userBank(eventRegister.getPathfinder().getBank())
                 .userGender(eventRegister.getPathfinder().getGender())
+                .userType(eventRegister.getPathfinder().getUserType().getDescription())
                 .eventAllocatedAmount(response.isPresent() ? response.get().getAmount() : 0)
                 .percentagePayment(calcPercentage(response))
                 .build();
@@ -49,6 +50,7 @@ public class EventRegisterMapper {
                 .user(eventRegister.getPathfinder().getName())
                 .userBank(eventRegister.getPathfinder().getBank())
                 .userGender(eventRegister.getPathfinder().getGender())
+                .userType(eventRegister.getPathfinder().getUserType().getDescription())
                 .eventAllocatedAmount(response.isPresent() ? response.get().getAmount() : 0)
                 .percentagePayment(calcPercentage(response))
                 .build();
