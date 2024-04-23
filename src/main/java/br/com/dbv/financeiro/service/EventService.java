@@ -44,7 +44,7 @@ public class EventService {
 
         var optionalEvent = repository.findById(eventId);
 
-        if (!optionalEvent.isPresent()) {
+        if (optionalEvent.isEmpty()) {
             return ResponseEntity.badRequest().body(new ErrorDTO("400", "Event not found", "Event not found"));
         }
 
@@ -73,7 +73,7 @@ public class EventService {
         var optionalEvent = eventRepository.findById(request.getEventId());
         var optionalPathfinder = userRepository.findById(request.getPathfinderId());
 
-        if (!optionalEvent.isPresent() || !optionalPathfinder.isPresent()) {
+        if (optionalEvent.isEmpty() || optionalPathfinder.isEmpty()) {
             throw new CustomException(new ErrorDTO("400", "Event or Pathfinder not found", "Event or Pathfinder not found in database"));
         }
 
@@ -87,7 +87,7 @@ public class EventService {
         MovementTypeEnum operation = null;
 
         if (request.getRegisterType().equals(EventTypeRegisterEnum.UNSUBSCRIBE)) {
-            if (!optionalEventRegister.isPresent()) {
+            if (optionalEventRegister.isEmpty()) {
                 throw new CustomException(new ErrorDTO("400", "User is not registered", "User is not registered"));
             }
             operation = MovementTypeEnum.TRANSFER_TO_USER_BANK;

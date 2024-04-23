@@ -12,9 +12,9 @@ import br.com.dbv.financeiro.model.Event;
 import br.com.dbv.financeiro.model.Payment;
 import br.com.dbv.financeiro.repository.*;
 import br.com.dbv.financeiro.service.EventService;
+import br.com.dbv.financeiro.service.PaymentService;
 import br.com.dbv.financeiro.service.UserMovementHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,6 +46,9 @@ public class PaymentController {
 
     @Autowired
     private EventService eventService;
+
+    @Autowired
+    private PaymentService paymentService;
 
     @GetMapping("/club/{clubId}")
     public ResponseEntity<?> getAllPaymentsByClub(@PathVariable("clubId") Long clubId) {
@@ -79,35 +82,33 @@ public class PaymentController {
 
         var club = clubRepository.findById(request.getClubId());
 
-        if (!club.isPresent()) {
+        if (club.isEmpty()) {
             return ResponseEntity.badRequest().body(new ErrorDTO("400", "Club not found", "Club not found in database"));
         }
 
-        Optional<Event> event = null;
+        Optional<Event> event = Optional.empty();
 
         if (request.getEventId() != null) {
             event = eventRepository.findById(request.getEventId());
 
-            if (!event.isPresent()) {
+            if (event.isEmpty()) {
                 return ResponseEntity.badRequest().body(new ErrorDTO("400", "Event not found", "Event not found in database"));
             }
         }
 
         var user = userRepository.findById(request.getUserId());
 
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             return ResponseEntity.badRequest().body(new ErrorDTO("400", "User not found", "User not found in database"));
         }
 
-        Payment payment = request.convert(club.get(), (event != null ? event.get() : null), user.get());
+        Payment payment = request.convert(club.get(), event.orElse(null), user.get());
 
         club.get().setBank(club.get().getBank() + request.getValue());
         user.get().setBank(user.get().getBank() + request.getValue());
 
-        var paymentResponse = repository.save(payment);
-
         //verifica se foi associado a algum evento e faz a devida distribuição
-        if (event != null) {
+        if (event.isPresent()) {
             try {
                 var eventRegister = eventRegisterRepository.findByEventIdAndPathfinderId(event.get().getId(), user.get().getId());
 
@@ -130,22 +131,20 @@ public class PaymentController {
             }
         }
 
+        var paymentResponse = repository.save(payment);
+
         return ResponseEntity.ok().body(paymentResponse);
 
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> paymentDelete(@PathVariable("id") UUID id) {
+    public ResponseEntity<?> paymentDelete(@PathVariable("id") String paymentId) {
 
         try {
-            Payment payment = repository.findById(id).get();
-            payment.getClub().setBank(payment.getClub().getBank() - payment.getValue());
-            repository.delete(payment);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDTO("404", "Payment not found", "Payment does not exist or has already been deleted"));
+            return paymentService.deletePayment(paymentId);
+        } catch (CustomException e) {
+            return ResponseEntity.badRequest().body(e.getError());
         }
-
-        return new ResponseEntity<>(HttpStatus.OK);
 
     }
 
