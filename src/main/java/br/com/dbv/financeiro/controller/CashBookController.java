@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/cash-book")
@@ -51,7 +52,7 @@ public class CashBookController {
 
         var club = clubRepository.findById(request.getClubId());
 
-        if (!club.isPresent()) {
+        if (club.isEmpty()) {
             return ResponseEntity.badRequest().body(new ErrorDTO("400", "Club not found", "Club not found in database"));
         }
 
@@ -77,19 +78,22 @@ public class CashBookController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCashBook(@PathVariable("id") Long id) {
-        try {
-            CashBook cashBook = repository.findById(id).get();
 
-            if (cashBook.getType() == BookTypeEnum.INPUT) {
-                cashBook.getClub().setBank(cashBook.getClub().getBank() - cashBook.getValue());
-            } else {
-                cashBook.getClub().setBank(cashBook.getClub().getBank() + cashBook.getValue());
-            }
+        Optional<CashBook> optionalCashBook = repository.findById(id);
 
-            repository.delete(cashBook);
-        } catch (Exception e) {
+        if (optionalCashBook.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDTO("404", "Payment not found", "Payment does not exist or has already been deleted"));
         }
+
+        var cashBook = optionalCashBook.get();
+
+        if (cashBook.getType() == BookTypeEnum.INPUT) {
+            cashBook.getClub().setBank(cashBook.getClub().getBank() - cashBook.getValue());
+        } else {
+            cashBook.getClub().setBank(cashBook.getClub().getBank() + cashBook.getValue());
+        }
+
+        repository.delete(cashBook);
 
         return new ResponseEntity<>(HttpStatus.OK);
 
