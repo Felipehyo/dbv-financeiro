@@ -2,6 +2,7 @@ package br.com.dbv.financeiro.dto;
 
 import br.com.dbv.financeiro.enums.GenderEnum;
 import br.com.dbv.financeiro.enums.UserTypeEnum;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDTO {
 
     private UUID id;

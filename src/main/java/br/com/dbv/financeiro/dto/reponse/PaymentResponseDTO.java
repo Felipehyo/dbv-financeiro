@@ -23,6 +23,7 @@ public class PaymentResponseDTO {
 
         var pathfinder = payment.getPathfinder();
         this.pathfinder = new UserDTO();
+        this.pathfinder.setId(pathfinder.getId());
         this.pathfinder.setName(pathfinder.getName());
         this.pathfinder.setUserType(pathfinder.getUserType());
         this.pathfinder.setBirthDate(pathfinder.getBirthDate());

@@ -51,9 +51,13 @@ public class PaymentController {
     private PaymentService paymentService;
 
     @GetMapping("/club/{clubId}")
-    public ResponseEntity<?> getAllPaymentsByClub(@PathVariable("clubId") Long clubId) {
+    public ResponseEntity<?> getAllPaymentsByClub(@PathVariable("clubId") Long clubId,
+//                                                  @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+//                                                  @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+                                                  @RequestParam(value = "pathfinderId", required = false) UUID pathfinderId,
+                                                  @RequestParam(value = "eventId", required = false) Long eventId) {
 
-        var payments = repository.findByClubId(clubId);
+        var payments = repository.findByClubIdAndPathfinderIdAndEventId(clubId, pathfinderId, eventId);
 
         var paymentsResponse = new ArrayList<>();
 
