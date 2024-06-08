@@ -5,9 +5,12 @@ import br.com.dbv.financeiro.dto.event.EventDTO;
 import br.com.dbv.financeiro.dto.event.EventRegisterDTO;
 import br.com.dbv.financeiro.dto.event.UpdateEventDTO;
 import br.com.dbv.financeiro.dto.movement.UserMovementHistoryRequestDTO;
+import br.com.dbv.financeiro.enums.ErrorBusinessEnum;
 import br.com.dbv.financeiro.enums.EventTypeRegisterEnum;
 import br.com.dbv.financeiro.enums.MovementTypeEnum;
+import br.com.dbv.financeiro.exception.BusinessException;
 import br.com.dbv.financeiro.exception.CustomException;
+import br.com.dbv.financeiro.model.Event;
 import br.com.dbv.financeiro.model.EventRegister;
 import br.com.dbv.financeiro.repository.EventRegisterRepository;
 import br.com.dbv.financeiro.repository.EventRepository;
@@ -39,6 +42,13 @@ public class EventService {
 
     @Autowired
     private UserMovementHistoryService userMovementHistoryService;
+
+    public Event getEvent(Long id) {
+
+        var optionalEvent = repository.findById(id);
+        if (optionalEvent.isEmpty()) throw new BusinessException(ErrorBusinessEnum.EVENT_NOT_FOUND);
+        return optionalEvent.get();
+    }
 
     public ResponseEntity<?> updateEvent(Long eventId, UpdateEventDTO request) {
 

@@ -1,20 +1,21 @@
 package br.com.dbv.financeiro.model;
 
-import br.com.dbv.financeiro.enums.BookTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "CASH_BOOK")
-public class CashBook {
+@Table(name = "REFUND")
+public class Refund {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,17 +26,21 @@ public class CashBook {
     private Club club;
 
     @ManyToOne
+    @JoinColumn(name = "pathfinder_id")
+    private Pathfinder pathfinder;
+
+    @ManyToOne
     @JoinColumn(name = "event_id")
     private Event event;
 
     @NotNull
-    private BookTypeEnum type;
-
-    @NotNull
-    private String description;
-    
     private Double value;
 
-    private LocalDate date;
+    private Boolean alreadyRefunded;
 
+    @CreatedDate
+    private LocalDateTime createdDate;
+
+    @LastModifiedDate
+    private LocalDateTime lastModifiedDate;
 }
