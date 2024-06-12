@@ -1,6 +1,6 @@
 # application.yml
 server:
-  port: ${PORT}
+#  port: ${PORT}
   servlet:
     context-path: "/pathfinders"
 
@@ -8,14 +8,17 @@ spring:
   application:
     name: pathfinders
   datasource:
-    url: ${DATASOURCE_URL}
-    username: ${DATASOURCE_USER}
-    password: ${DATASOURCE_PASSWORD}
-    driver-class-name: ${DATASOURCE_DRIVER}
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USER:root}
+    password: ${DATABASE_PASSWORD:root}
+    driver-class-name: ${DATABASE_DRIVER:org.postgresql.Driver}
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+    generate-ddl: false
     properties:
       hibernate:
-        dialect: ${DATASOURCE_DIALECT}
+        dialect: ${DATASOURCE_DIALECT:org.hibernate.dialect.PostgreSQLDialect}
+    thymeleaf:
+      cache: true
