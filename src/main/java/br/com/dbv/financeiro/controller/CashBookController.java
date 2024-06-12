@@ -5,8 +5,12 @@ import br.com.dbv.financeiro.dto.ErrorDTO;
 import br.com.dbv.financeiro.dto.reponse.CashBookResponseDTO;
 import br.com.dbv.financeiro.enums.BookTypeEnum;
 import br.com.dbv.financeiro.model.CashBook;
+import br.com.dbv.financeiro.model.Event;
 import br.com.dbv.financeiro.repository.CashBookRepository;
 import br.com.dbv.financeiro.repository.ClubRepository;
+import br.com.dbv.financeiro.repository.EventRepository;
+import br.com.dbv.financeiro.service.CashBookService;
+import br.com.dbv.financeiro.service.mapper.CashBookMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,17 +29,26 @@ public class CashBookController {
     @Autowired
     private ClubRepository clubRepository;
 
-    @GetMapping()
-    public ResponseEntity<?> getAllCashBook() {
+    @Autowired
+    private EventRepository eventRepository;
 
-        return ResponseEntity.ok().body(repository.findAll());
+    @Autowired
+    private CashBookService service;
 
+    private final CashBookMapper cashBookMapper = new CashBookMapper();
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok().body(cashBookMapper.toDto(service.getById(id)));
     }
 
-    @GetMapping("/{clubId}")
-    public ResponseEntity<?> getCashBookByClub(@PathVariable("clubId") Long id) {
+    @GetMapping("/club/{clubId}")
+    public ResponseEntity<?> getCashBookByClub(@PathVariable("clubId") Long id,
+//                                               @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+//                                               @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+                                               @RequestParam(value = "eventId", required = false) Long eventId) {
 
-        var cashBookList = repository.findByClubId(id);
+        var cashBookList = repository.findByClubIdAndEventId(id, eventId);
 
         var responseList = new ArrayList<>();
 
@@ -48,20 +61,29 @@ public class CashBookController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createCashBook(@RequestBody CashBookDTO request) {
+    public ResponseEntity<?> createCashBook(@RequestHeader(value = "clubId") Long clubId, @RequestBody CashBookDTO request) {
 
-        var club = clubRepository.findById(request.getClubId());
+        var club = clubRepository.findById(clubId);
 
         if (club.isEmpty()) {
             return ResponseEntity.badRequest().body(new ErrorDTO("400", "Club not found", "Club not found in database"));
         }
 
-        CashBook cashBook = request.convert(club.get());
+        Event event = null;
+
+        if (request.getEventId() != null) {
+            var optionalEvent = eventRepository.findById(request.getEventId());
+            if (optionalEvent.isPresent()) {
+                event = optionalEvent.get();
+            }
+        }
+
+        CashBook cashBook = request.convert(club.get(), event);
 
         if (cashBook.getType() == BookTypeEnum.INPUT) {
-            club.get().setBank(club.get().getBank() + request.getValue());
+            club.get().setBank(club.get().getBank() + Double.parseDouble(request.getValue()));
         } else {
-            club.get().setBank(club.get().getBank() - request.getValue());
+            club.get().setBank(club.get().getBank() - Double.parseDouble(request.getValue()));
         }
 
         CashBook response;
@@ -74,6 +96,11 @@ public class CashBookController {
 
         return ResponseEntity.ok().body(response);
 
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateCashBook(@PathVariable("id") Long id, @RequestBody CashBookDTO request) {
+        return ResponseEntity.ok().body(service.update(id, request));
     }
 
     @DeleteMapping("/{id}")

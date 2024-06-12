@@ -1,17 +1,24 @@
-spring:
-  datasource:
-#    url: jdbc:postgresql://localhost:3306/dbvfinanceiro
-#    url: jdbc:mysql://localhost:3306/dbvfinanceiro
-    url: ${DATABASE_URL}
-    username: root
-    password: root
-  jpa:
-    hibernate.ddl-auto: update
-    generate-ddl: false
-    show-sql: true
-  thymeleaf:
-    cache: true
-
+# application.yml
 server:
+#  port: ${PORT}
   servlet:
     context-path: "/pathfinders"
+
+spring:
+  application:
+    name: pathfinders
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USER:root}
+    password: ${DATABASE_PASSWORD:root}
+    driver-class-name: ${DATABASE_DRIVER:org.postgresql.Driver}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    generate-ddl: false
+    properties:
+      hibernate:
+        dialect: ${DATASOURCE_DIALECT:org.hibernate.dialect.PostgreSQLDialect}
+    thymeleaf:
+      cache: true
