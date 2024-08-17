@@ -1,6 +1,7 @@
 package br.com.dbv.financeiro.controller;
 
 import br.com.dbv.financeiro.dto.ErrorDTO;
+import br.com.dbv.financeiro.dto.PaginatedResponseDTO;
 import br.com.dbv.financeiro.dto.PaymentDTO;
 import br.com.dbv.financeiro.dto.event.EventRegisterDTO;
 import br.com.dbv.financeiro.dto.movement.UserMovementHistoryRequestDTO;
@@ -15,10 +16,13 @@ import br.com.dbv.financeiro.service.EventService;
 import br.com.dbv.financeiro.service.PaymentService;
 import br.com.dbv.financeiro.service.UserMovementHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -55,16 +59,23 @@ public class PaymentController {
 //                                                  @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
 //                                                  @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
                                                   @RequestParam(value = "pathfinderId", required = false) UUID pathfinderId,
-                                                  @RequestParam(value = "eventId", required = false) Long eventId) {
+                                                  @RequestParam(value = "eventId", required = false) Long eventId,
+                                                  @PageableDefault(size = 2) Pageable pageable) {
 
-        var payments = repository.findByClubIdAndPathfinderIdAndEventId(clubId, pathfinderId, eventId);
+        var payments = repository.findByClubIdAndPathfinderIdAndEventId(clubId, pathfinderId, eventId, pageable);
 
-        var paymentsResponse = new ArrayList<>();
-
+        List<PaymentResponseDTO> paymentsResponse = new ArrayList<>();
         payments.forEach(p -> paymentsResponse.add(new PaymentResponseDTO(p)));
 
-        return ResponseEntity.ok().body(paymentsResponse);
+        var response = new PaginatedResponseDTO<>(
+                paymentsResponse,
+                payments.getNumber(),
+                payments.getSize(),
+                payments.getTotalElements(),
+                payments.getTotalPages()
+        );
 
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/{id}")

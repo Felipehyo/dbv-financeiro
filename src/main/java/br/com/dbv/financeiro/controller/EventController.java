@@ -12,7 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import java.time.LocalDate;
+import java.time.ZoneId;
 
 @RestController
 @RequestMapping("/event")
@@ -32,9 +33,17 @@ public class EventController {
     private EventService eventService;
 
     @GetMapping("/club/{clubId}")
-    public ResponseEntity<?> getAllEventsByClub(@PathVariable("clubId") Long clubId) {
+    public ResponseEntity<?> getAllEventsByClub(@PathVariable("clubId") Long clubId, @RequestParam(required = false) Boolean showOnlyFutureDate) {
 
-        return ResponseEntity.ok().body(repository.getEventsAndRegisterByClub(clubId));
+        Object response;
+
+        if(showOnlyFutureDate == null || showOnlyFutureDate) {
+            response = repository.getEventsAndRegisterByClub(clubId, LocalDate.now(ZoneId.of("America/Sao_Paulo")).minusDays(7));
+        } else {
+            response = repository.getEventsAndRegisterByClub(clubId);
+        }
+
+        return ResponseEntity.ok().body(response);
 
     }
 
